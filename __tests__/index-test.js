@@ -1,96 +1,117 @@
-import { PID, spawn, isAlive, self, receive, send } from "../";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Record } from "immutable";
 
-describe("process", () => {
-  describe("spawn", () => {
-    it("runs the process", done => {
-      spawn(function* () { done() });
+import { ReComponent } from "../";
+
+global.__DEV__ = true;
+
+function click(element) {
+  element.dispatchEvent(new Event("click", { bubbles: true }));
+}
+
+describe("ReComponent", () => {
+  let container;
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+  });
+
+  describe("with plain JS objects", () => {
+    class Example extends ReComponent {
+      constructor() {
+        super();
+        this.handleClick = this.createDispatcher("CLICK");
+      }
+
+      initialState(props) {
+        return {
+          count: 0
+        };
+      }
+
+      reducer(action, state) {
+        switch (action.type) {
+          case "CLICK":
+            return { count: state.count + 1 };
+        }
+      }
+
+      render() {
+        return (
+          <button onClick={this.handleClick}>
+            You've clicked this {this.state.count} times(s)
+          </button>
+        );
+      }
+    }
+
+    it("renders the initial state", () => {
+      const instance = ReactDOM.render(<Example />, container);
+      expect(container.firstChild).toMatchSnapshot();
     });
 
-    it("returns a pid", () => {
-      const pid = spawn(function* () {});
-      expect(pid).toBeInstanceOf(PID);
+    it("increases the counter when clicked", () => {
+      const instance = ReactDOM.render(<Example />, container);
+      click(container.firstChild);
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 
-  describe("isAlive", () => {
-    it("returns true for another process", () => {
-      const pid = spawn(function* () { return });
-      expect(isAlive(pid)).toBe(true);
+  describe("with Immutable.JS records", () => {
+    const State = Record({ count: 0 });
+    class Example extends ReComponent {
+      constructor() {
+        super();
+        this.handleClick = this.createDispatcher("CLICK");
+      }
+
+      initialState(props) {
+        return State();
+      }
+
+      reducer(action, state) {
+        switch (action.type) {
+          case "CLICK":
+            return state.update("count", count => count + 1);
+        }
+      }
+
+      render() {
+        return (
+          <button onClick={this.handleClick}>
+            You've clicked this {this.immutableState.count} times(s)
+          </button>
+        );
+      }
+    }
+
+    it("renders the initial state", () => {
+      const instance = ReactDOM.render(<Example />, container);
+      expect(container.firstChild).toMatchSnapshot();
+    });
+
+    it("increases the counter when clicked", () => {
+      const instance = ReactDOM.render(<Example />, container);
+      click(container.firstChild);
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 
-  describe("send and receive", () => {
-    it("can receive a messages on the main process that was already sent", async () => {
-      send(self(), {
-        type: "test",
-        payload: { key: "value" }
-      });
+  describe("with mocked console", () => {
+    const originalError = console.error;
+    beforeEach(() => (console.error = jest.fn()));
+    afterEach(() => (console.error = originalError));
+    it("errors when no `reducer` method is defined", () => {
+      class Example extends ReComponent {
+        render() {
+          return <div />;
+        }
+      }
 
-      const message = await receive("test");
-      expect(message).toEqual({
-        type: "test",
-        payload: { key: "value" }
-      });
-    });
-
-    it("can receive a messages on the main process that will be sent", async () => {
-      setTimeout(() => {
-        send(self(), {
-          type: "test",
-          payload: { key: "value" }
-        });
-      }, 0);
-
-      const message = await receive("test");
-      expect(message).toEqual({
-        type: "test",
-        payload: { key: "value" }
-      });
+      expect(() => {
+        ReactDOM.render(<Example />, container);
+      }).toThrowErrorMatchingSnapshot();
     });
   });
 });
-
-// class CountServer extends GenServer {
-//   getInitialState(initialProps) {
-//     this.state = { counter: initialProps.counter || 0 }
-//   }
-
-//   // async
-//   handleCast(action) {
-//     switch (action.type) {
-//       case "INCREMENT":
-//         this.setState(({ count }) => {
-//           count: count + 1;
-//         });
-//         break;
-//       case "DECREMENT":
-//         this.setState(({ count }) => {
-//           count: count - 1;
-//         });
-//         break;
-//     }
-//   }
-
-//   // sync
-//   handleCall(action) {
-//     switch (action.type) {
-//       case "INCREMENT":
-//         this.setState(({ count }) => {
-//           count: count + 1;
-//         });
-//         break;
-//       case "DECREMENT":
-//         this.setState(({ count }) => {
-//           count: count - 1;
-//         });
-//         break;
-//     }
-//   }
-// }
-//
-// describe("react-genserver", () => {
-//   it("works", () => {
-//     const pid = start(CountServer)
-//     console.log(pid);
-//   });
-// });

@@ -1,24 +1,55 @@
-// export {  self } from './pid'
-export { start, self, spawn, send, receive, isAlive } from "./process";
+import React from "react";
 
-export {PID } from "erlang-types"
-// export class GenServer {
-//   constructor(initialProps) {
-//     this.getInitialState && this.setState(this.getInitialState(initialProps));
-//   }
+import { isImmutable } from "./isImmutable";
 
-//   setState(updater) {
-//     let nextState = updater;
-//     if (typeof updater == "function") {
-//       nextState = updater(this.state);
-//     }
+export class ReComponent extends React.Component {
+  constructor(props) {
+    super(props);
 
-//     this.state = Object.assign({}, this.state, nextState);
-//   }
+    if (__DEV__) {
+      if(typeof this.reducer !== 'function') {
+        const name = this.constructor.name || this.displayName
+        throw new Error(name + '(...): No `reducer` method found on the returned component ' +
+        'instance: did you define a reducer?')
+      }
+    }
 
-//   cast() {}
+    let stateIsImmutable = false;
+    if (this.initialState) {
+      let initialState = this.initialState(props);
 
-//   call() {}
-// }
+      if (isImmutable(initialState)) {
+        stateIsImmutable = true;
+        initialState = { immutableState: initialState };
 
-// export { start, spawn, send, receive };
+        // Define Immutable.js helpers
+        this.setImmutableState = updater => {
+          this.setState({ immutableState: updater(this.immutableState) });
+        };
+        Object.defineProperty(this, "immutableState", {
+          get: () => this.state.immutableState
+        });
+      }
+
+      this.state = initialState;
+    }
+
+    this.send = action => {
+      const reduce = state => this.reducer(action, state)
+
+      if (stateIsImmutable) {
+        this.setImmutableState(reduce);
+      } else {
+        this.setState(reduce);
+      }
+    };
+
+    this.createDispatcher = type => {
+      return payload =>
+        this.send({
+          type,
+          payload
+        });
+    };
+  }
+}
