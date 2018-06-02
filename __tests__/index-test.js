@@ -40,7 +40,7 @@ describe("ReComponent", () => {
       render() {
         return (
           <button onClick={this.handleClick}>
-            You've clicked this {this.state.count} times(s)
+            You’ve clicked this {this.state.count} times(s)
           </button>
         );
       }
@@ -80,7 +80,7 @@ describe("ReComponent", () => {
       render() {
         return (
           <button onClick={this.handleClick}>
-            You've clicked this {this.immutableState.count} times(s)
+            You’ve clicked this {this.immutableState.count} times(s)
           </button>
         );
       }
