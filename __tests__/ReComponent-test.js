@@ -113,4 +113,50 @@ describe("ReComponent", () => {
       }).toThrowErrorMatchingSnapshot();
     });
   });
+
+  it("disables `setState`", () => {
+    let setState;
+    class Example extends ReComponent {
+      constructor() {
+        super();
+        setState = () => this.setState({ some: "state" });
+      }
+      reducer() {}
+      render() {
+        return null;
+      }
+    }
+
+    ReactDOM.render(<Example />, container);
+    withConsoleMock(() => {
+      expect(() => setState()).toThrowErrorMatchingSnapshot();
+    });
+  });
+
+  it("does not throw errors in production", () => {
+    try {
+      global.__DEV__ = false;
+
+      let click;
+      class Example extends ReComponent {
+        constructor() {
+          super();
+          click = this.createSender("CLICK");
+        }
+
+        reducer(action, state) {
+          return {};
+        }
+
+        render() {
+          return null;
+        }
+      }
+
+      ReactDOM.render(<Example />, container);
+      expect(() => click()).not.toThrowError();
+    } finally {
+      global.__DEV__ = true;
+    }
+  });
 });

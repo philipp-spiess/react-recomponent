@@ -13,7 +13,7 @@ export function Re(Component) {
 
       if (__DEV__) {
         if (typeof this.reducer !== "function") {
-          const name = this.constructor.name || this.displayName;
+          const name = this.displayName || this.constructor.name;
           throw new Error(
             name +
               "(...): No `reducer` method found on the returned component " +
@@ -29,7 +29,7 @@ export function Re(Component) {
 
       if (__DEV__) {
         this.setState = () => {
-          const name = this.constructor.name || this.displayName;
+          const name = this.displayName || this.constructor.name;
           throw new Error(
             name +
               "(...): Calls to `setState` are not allowed. Please use the " +
@@ -88,7 +88,7 @@ export function Re(Component) {
 
           if (__DEV__) {
             if (typeof reduced === "undefined") {
-              const name = this.constructor.name || this.displayName;
+              const name = this.displayName || this.constructor.name;
               throw new Error(
                 name +
                   "(...): `reducer` method returned `undefined`: did you " +
@@ -114,7 +114,7 @@ export function Re(Component) {
               break;
             default: {
               if (__DEV__) {
-                const name = this.constructor.name || this.displayName;
+                const name = this.displayName || this.constructor.name;
                 throw new Error(
                   name +
                     "(...): Return value of `reducer` method is not a valid " +
