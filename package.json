@@ -19,7 +19,9 @@
     "react": "^16.4.0"
   },
   "scripts": {
-    "format": "prettier {__tests__,src}/**.js --write"
+    "test": "jest",
+    "prettier": "prettier {__tests__,src}/**.js",
+    "format": "yarn prettier --write"
   },
   "jest": {
     "testRegex": "(/__tests__/.*\\-(test))\\.js$"
