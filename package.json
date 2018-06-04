@@ -20,5 +20,8 @@
   },
   "scripts": {
     "format": "prettier {__tests__,src}/**.js --write"
+  },
+  "jest": {
+    "testRegex": "(/__tests__/.*\\-(test))\\.js$"
   }
 }

@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`ReComponent errors when no \`reducer\` method is defined 1`] = `"Example(...): No \`reducer\` method found on the returned component instance: did you define a reducer?"`;
-
-exports[`ReComponent reducer returns throws when an invalid value was returned 1`] = `"ReducerReturns(...): Return value of \`reducer\` method is not a valid action. Please use: \`NoUpdate()\`, \`Update(state)\`, \`SideEffects(fn)\`, or \`UpdateWithSideEffects(state, fn)\` instead."`;
-
-exports[`ReComponent reducer returns throws when no value was returned 1`] = `"ReducerReturns(...): \`reducer\` method returned \`undefined\`: did you forget to handle this action? Please return \`NoUpdate()\`, \`Update(state)\`, \`SideEffects(fn)\`, or \`UpdateWithSideEffects(state, fn)\` instead."`;
