@@ -1,6 +1,9 @@
 language: node_js
 node_js:
   - "node"
+install:
+  - "yarn global add codecov"
 script:
   - "yarn test --coverage"
   - "yarn prettier --list-different"
+  - "codecov"
