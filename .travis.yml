@@ -2,5 +2,5 @@ language: node_js
 node_js:
   - "node"
 script:
-  - "yarn test"
+  - "yarn test --coverage"
   - "yarn prettier --list-different"

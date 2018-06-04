@@ -24,6 +24,7 @@
     "format": "yarn prettier --write"
   },
   "jest": {
-    "testRegex": "(/__tests__/.*\\-(test))\\.js$"
+    "testRegex": "(/__tests__/.*\\-(test))\\.js$",
+    "coverageDirectory": "./coverage/"
   }
 }
