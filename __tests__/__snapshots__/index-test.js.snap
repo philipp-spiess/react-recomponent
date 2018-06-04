@@ -1,35 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReComponent with Immutable.JS records increases the counter when clicked 1`] = `
-<button>
-  You’ve clicked this 
-  1
-   times(s)
-</button>
-`;
+exports[`ReComponent errors when no \`reducer\` method is defined 1`] = `"Example(...): No \`reducer\` method found on the returned component instance: did you define a reducer?"`;
 
-exports[`ReComponent with Immutable.JS records renders the initial state 1`] = `
-<button>
-  You’ve clicked this 
-  0
-   times(s)
-</button>
-`;
+exports[`ReComponent reducer returns throws when an invalid value was returned 1`] = `"ReducerReturns(...): Return value of \`reducer\` method is not a valid action. Please use: \`NoUpdate()\`, \`Update(state)\`, \`SideEffects(fn)\`, or \`UpdateWithSideEffects(state, fn)\` instead."`;
 
-exports[`ReComponent with mocked console errors when no \`reducer\` method is defined 1`] = `"Example(...): No \`reducer\` method found on the returned component instance: did you define a reducer?"`;
-
-exports[`ReComponent with plain JS objects increases the counter when clicked 1`] = `
-<button>
-  You’ve clicked this 
-  1
-   times(s)
-</button>
-`;
-
-exports[`ReComponent with plain JS objects renders the initial state 1`] = `
-<button>
-  You’ve clicked this 
-  0
-   times(s)
-</button>
-`;
+exports[`ReComponent reducer returns throws when no value was returned 1`] = `"ReducerReturns(...): \`reducer\` method returned \`undefined\`: did you forget to handle this action? Please return \`NoUpdate()\`, \`Update(state)\`, \`SideEffects(fn)\`, or \`UpdateWithSideEffects(state, fn)\` instead."`;

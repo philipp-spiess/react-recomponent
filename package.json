@@ -8,6 +8,7 @@
     "babel-jest": "^23.0.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "immutable": "^3.8.2",
     "jest": "^23.1.0",
     "prettier": "^1.13.4",
     "react": "^16.4.0",
@@ -16,5 +17,8 @@
   },
   "peerDependencies": {
     "react": "^16.4.0"
+  },
+  "scripts": {
+    "format": "prettier {__tests__,src}/**.js --write"
   }
 }
