@@ -3,6 +3,7 @@ node_js:
   - "node"
 install:
   - "yarn global add codecov"
+  - "yarn install --freeze-lockfile"
 script:
   - "yarn test --coverage"
   - "yarn prettier --list-different"
