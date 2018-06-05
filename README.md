@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="npm" src="https://img.shields.io/npm/v/react-recomponent.svg" />
-  <a href="https://github.com/philipp-spiess/react-recomponent/blob/master/LICENSE">
+  <a href="https://github.com/philipp-spiess/react-recomponent/blob/master/LICENSE.md">
     <img alt="GitHub license" src="https://img.shields.io/badge/license-MIT-blue.svg" />
   </a>
   <a href="https://travis-ci.org/philipp-spiess/react-recomponent">
