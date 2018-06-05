@@ -7,4 +7,5 @@ install:
 script:
   - "yarn test --coverage"
   - "yarn prettier --list-different"
+  - "yarn test:types:flow"
   - "codecov"

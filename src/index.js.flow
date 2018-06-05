@@ -1,0 +1,3 @@
+/* @flow */
+
+export * from '../type-definitions/ReComponent.js.flow';

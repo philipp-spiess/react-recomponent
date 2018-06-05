@@ -9,6 +9,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "immutable": "^3.8.2",
+    "flow-bin": "^0.73.0",
     "jest": "^23.1.0",
     "prettier": "^1.13.4",
     "react": "^16.4.0",
@@ -20,8 +21,9 @@
   },
   "scripts": {
     "test": "jest",
-    "prettier": "prettier {__tests__,src}/**.js",
-    "format": "yarn prettier --write"
+    "prettier": "prettier {__tests__,src,type-definitions}/**.js",
+    "format": "yarn prettier --write",
+    "test:types:flow": "flow check ."
   },
   "jest": {
     "testRegex": "(/__tests__/.*\\-(test))\\.js$",
