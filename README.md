@@ -77,7 +77,7 @@ The `Counter` component starts with an initial state of `{ count: 0 }`. Note tha
 
 The `reducer` will receive this action and act accordingly. In our case, it will return an `Update()` effect with the modified state.
 
-ReComponent comes with four different types of effects:
+ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects):
 
 - `NoUpdate()` to signalize that nothing should happen.
 - `Update(state)` to update the state.
