@@ -1,6 +1,6 @@
 {
   "name": "react-recomponent",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "src/index.js",
   "license": "MIT",
   "devDependencies": {
@@ -8,8 +8,8 @@
     "babel-jest": "^23.0.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "immutable": "^3.8.2",
     "flow-bin": "^0.73.0",
+    "immutable": "^3.8.2",
     "jest": "^23.1.0",
     "prettier": "^1.13.4",
     "react": "^16.4.0",
