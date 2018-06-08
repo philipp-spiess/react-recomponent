@@ -96,7 +96,7 @@ Now that we‘ve learned how to use reducer components with React, it‘s time t
 
 React uses a method called pooling to improve performance when emitting events (check out the guides on [`SyntheticEvent`](https://reactjs.org/docs/events.html) to learn more). This means that events that React will trigger will be reused after the callback was handled.
 
-Since the reducer function always runs within the `setState()` callback provided by React, synthetic events will already be recycled. To still be able to access event properties, we recommend passing the required values explicitly. The following example will show the coordinates of the last mouse click. To have control over which properties are sent to the reducer, we're using `send` directly in this case:
+Since the reducer function always runs within the `setState()` callback provided by React, synthetic events will already be recycled. To still be able to access event properties, we recommend passing the required values explicitly. The following example will show the coordinates of the last mouse click. To have control over which properties are sent to the reducer, we‘re using `send` directly in this case:
 
 ```js
 import React from "react";
