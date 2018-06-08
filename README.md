@@ -374,6 +374,7 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 ### Classes
 
 - `ReComponent`
+
   - `initialState(props): state`
 
     Initialize the state of the component based on its props.
@@ -386,7 +387,7 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
   - `send(action): void`
 
-    Sends an action to the reducer. The action *must* have a `type` property so the reducer can identify it.
+    Sends an action to the reducer. The action _must_ have a `type` property so the reducer can identify it.
 
   - `createSender(actionType): fn`
 

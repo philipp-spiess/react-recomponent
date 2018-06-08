@@ -31,7 +31,7 @@
   },
   "scripts": {
     "test": "jest",
-    "prettier": "prettier {__tests__,src,type-definitions}/**.js",
+    "prettier": "prettier {{__tests__,src,type-definitions}/**.js,README.md}",
     "format": "yarn prettier --write",
     "test:types:flow": "flow check .",
     "build": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
