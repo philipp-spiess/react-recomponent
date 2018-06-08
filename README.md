@@ -42,7 +42,7 @@ Using `ReComponent` works in the same way as using a regular React component. St
 
 ```js
 import React from "react";
-import { ReComponent, Update } from "reason-recomponent";
+import { ReComponent, Update } from "react-recomponent";
 
 class Counter extends ReComponent {
   constructor() {
@@ -98,7 +98,7 @@ Fortunately, React 16.3.0 introduced a new API called [`createContext()`](https:
 
 ```js
 import React from "react";
-import { ReComponent, Update } from "reason-recomponent";
+import { ReComponent, Update } from "react-recomponent";
 
 const { Provider, Consumer } = React.createContext();
 
@@ -161,7 +161,7 @@ ReComponent comes with first class Flow support built in. By default, a ReCompon
 
 ```js
 import * as React from "react";
-import { ReComponent, Update } from "reason-recomponent";
+import { ReComponent, Update } from "react-recomponent";
 
 type Props = {};
 type State = { count: number };
@@ -198,7 +198,7 @@ Without specifying our action types any further, we will allow all `string` valu
 
 ```js
 import * as React from "react";
-import { ReComponent, Update } from "reason-recomponent";
+import { ReComponent, Update } from "react-recomponent";
 
 type Props = {};
 type State = { count: number };
