@@ -1,8 +1,17 @@
 {
   "name": "react-recomponent",
   "version": "0.1.0",
-  "main": "src/index.js",
+  "main": "dist/react-recomponent.js",
+  "umd:main": "dist/react-recomponent.umd.js",
+  "module": "dist/react-recomponent.m.js",
+  "source": "src/index.js",
   "license": "MIT",
+  "files": [
+    "dist",
+    "type-definitions/ReComponent.js.flow",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-jest": "^23.0.1",
@@ -11,6 +20,7 @@
     "flow-bin": "^0.73.0",
     "immutable": "^3.8.2",
     "jest": "^23.1.0",
+    "microbundle": "^0.4.4",
     "prettier": "^1.13.4",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -23,7 +33,9 @@
     "test": "jest",
     "prettier": "prettier {__tests__,src,type-definitions}/**.js",
     "format": "yarn prettier --write",
-    "test:types:flow": "flow check ."
+    "test:types:flow": "flow check .",
+    "build": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
+    "prepublish": "build"
   },
   "jest": {
     "testRegex": "(/__tests__/.*\\-(test))\\.js$",

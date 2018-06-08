@@ -7,7 +7,7 @@ import {
   Update,
   SideEffects,
   UpdateWithSideEffects
-} from "../";
+} from "../src";
 
 import { click, withConsoleMock } from "./helpers";
 
