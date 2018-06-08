@@ -73,6 +73,8 @@ class Counter extends ReComponent {
 }
 ```
 
+[Open in CodeSandbox](https://codesandbox.io/s/zq0210299x)
+
 The `Counter` component starts with an initial state of `{ count: 0 }`. Note that this state is in fact a regular React component state. To update it, we use a click action which we identify by its type `"CLICK"` (This is similar to the way we actions are identified in Redux).
 
 The `reducer` will receive this action and act accordingly. In our case, it will return an `Update()` effect with the modified state.
@@ -150,6 +152,8 @@ class Container extends ReComponent {
   }
 }
 ```
+
+[Open in CodeSandbox](https://codesandbox.io/s/0q9l907m7p)
 
 If you‘re having troubles understanding this example, I recommend the fantastic documentation written by the React team about [Context](https://reactjs.org/docs/context.html#reactcreatecontext).
 
