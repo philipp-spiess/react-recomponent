@@ -92,6 +92,66 @@ By intelligently returning any of the four types, it is possible to transition b
 
 Now that we‘ve learned how to use reducer components with React, it‘s time to look into more advanced use cases to effectively handle state transitions across bigger portions of your app.
 
+### Handling Events
+
+React uses a method called pooling to improve performance when emitting events (check out the guides on [`SyntheticEvent`](https://reactjs.org/docs/events.html) to learn more). This means that events that React will trigger will be reused after the callback was handled.
+
+Since the reducer function always runs within the `setState()` callback provided by React, synthetic events will already be recycled. To still be able to access event properties, we recommend passing the required values explicitly. The following example will show the coordinates of the last mouse click. To have control over which properties are sent to the reducer, we're using `send` directly in this case:
+
+```js
+import React from "react";
+import { ReComponent, Update } from "react-recomponent";
+
+class Counter extends ReComponent {
+  constructor() {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  initialState(props) {
+    return { x: 0, y: 0 };
+  }
+
+  handleClick(event) {
+    this.send({
+      type: "CLICK",
+      payload: {
+        x: event.clientX,
+        y: event.clientY
+      }
+    });
+  }
+
+  reducer(action, state) {
+    switch (action.type) {
+      case "CLICK":
+        return Update({
+          x: action.payload.x,
+          y: action.payload.y
+        });
+    }
+  }
+
+  render() {
+    const { x, y } = this.state;
+
+    const style = {
+      width: "100vw",
+      height: "100vh"
+    };
+
+    return (
+      <div style={style} onClick={this.handleClick}>
+        Last click at: {x}, {y}
+      </div>
+    );
+  }
+}
+```
+
+[Open in CodeSandbox](https://codesandbox.io/s/8yxqzw23n2)
+
+
 ### Manage State Across the Tree
 
 You often want to pass state properties down to other children in order for them to behave properly. Some times, however, this tree is very deep and it might be inefficient to go through the whole tree (and thereby updating it) to pass a value down.
