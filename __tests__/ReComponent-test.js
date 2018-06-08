@@ -134,8 +134,9 @@ describe("ReComponent", () => {
   });
 
   it("does not throw errors in production", () => {
+    let originalNodeEnv = process.env.NODE_ENV;
     try {
-      global.__DEV__ = false;
+      process.env.NODE_ENV = "production";
 
       let click;
       class Example extends ReComponent {
@@ -156,7 +157,7 @@ describe("ReComponent", () => {
       ReactDOM.render(<Example />, container);
       expect(() => click()).not.toThrowError();
     } finally {
-      global.__DEV__ = true;
+      process.env.NODE_ENV = originalNodeEnv;
     }
   });
 });

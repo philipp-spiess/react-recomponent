@@ -11,7 +11,7 @@ export function Re(Component) {
     constructor(props) {
       super(props);
 
-      if (__DEV__) {
+      if (process.env.NODE_ENV !== "production") {
         if (typeof this.reducer !== "function") {
           const name = this.displayName || this.constructor.name;
           throw new Error(
@@ -27,7 +27,7 @@ export function Re(Component) {
       const originalSetState = this.setState;
       let setState = this.setState;
 
-      if (__DEV__) {
+      if (process.env.NODE_ENV !== "production") {
         this.setState = () => {
           const name = this.displayName || this.constructor.name;
           throw new Error(
@@ -86,7 +86,7 @@ export function Re(Component) {
         const updater = state => {
           const reduced = this.reducer(action, state);
 
-          if (__DEV__) {
+          if (process.env.NODE_ENV !== "production") {
             if (typeof reduced === "undefined") {
               const name = this.displayName || this.constructor.name;
               throw new Error(
@@ -113,7 +113,7 @@ export function Re(Component) {
               sideEffects = reduced.sideEffects;
               break;
             default: {
-              if (__DEV__) {
+              if (process.env.NODE_ENV !== "production") {
                 const name = this.displayName || this.constructor.name;
                 throw new Error(
                   name +
