@@ -303,8 +303,6 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
 - While it is possible to exhaustively type check the reducer, Flow will still require every branch to return an effect. This is why the above examples returns `NoUpdate()` even though the branch can never be reached.
 
-##
-
 ## API Reference
 
 ### Classes
