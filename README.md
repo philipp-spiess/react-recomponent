@@ -30,6 +30,15 @@ There are numerous solutions to managing state in React including powerful libra
 
 A reducer component is used like a regular, stateful, React component with the added twist that `setState` is not allowed. Instead, state is updated through a `reducer` which is triggered by sending actions to it. ReComponent brings this concept to your React application today.
 
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Advanced Usage](#advanced-usage)
+  - [Side Effects](#side-effects)
+  - [Handling Events](#handling-events)
+  - [Manage State Across the Tree](#manage-state-across-the-tree)
+  - [Flow](#flow)
+- [API Reference](#api-reference)
+
 ## Installation
 
 ```
