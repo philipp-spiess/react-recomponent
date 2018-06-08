@@ -151,6 +151,73 @@ class Counter extends ReComponent {
 
 [![Edit ReComponent - Handling Events](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/8yxqzw23n2)
 
+### Side Effects
+
+We‘ve already heard that ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects). This is necessary to affectively handling side effects by keeping your reducer pure (given the same state and action, it will always return the same effects).
+
+The following example will demonstrate the four different types of effects and shows you how to use them:
+
+```js
+import React from "react";
+import {
+  ReComponent,
+  NoUpdate,
+  Update,
+  SideEffects,
+  UpdateWithSideEffects
+} from "react-recomponent";
+
+class Counter extends ReComponent {
+  constructor() {
+    super();
+    this.handleNoUpdate = this.createSender("NO_UPDATE");
+    this.handleUpdate = this.createSender("UPDATE");
+    this.handleSideEffects = this.createSender("SIDE_EFFECTS");
+    this.handleUpdateWithSideEffects = this.createSender(
+      "UPDATE_WITH_SIDE_EFFECTS"
+    );
+  }
+
+  initialState(props) {
+    return {
+      count: 0
+    };
+  }
+
+  reducer(action, state) {
+    switch (action.type) {
+      case "NO_UPDATE":
+        return NoUpdate();
+      case "UPDATE":
+        return Update({ count: state.count + 1 });
+      case "SIDE_EFFECTS":
+        return SideEffects(() => console.log("This is a side effect"));
+      case "UPDATE_WITH_SIDE_EFFECTS":
+        return UpdateWithSideEffects({ count: state.count + 1 }, () =>
+          console.log("This is another side effect")
+        );
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <button onClick={this.handleNoUpdate}>NoUpdate</button>
+        <button onClick={this.handleUpdate}>Update</button>
+        <button onClick={this.handleSideEffects}>SideEffects</button>
+        <button onClick={this.handleUpdateWithSideEffects}>
+          UpdateWithSideEffects
+        </button>
+
+        <div>The current counter is: {this.state.count}</div>
+      </React.Fragment>
+    );
+  }
+}
+```
+
+[![Edit ReComponent - Side Effects](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/5x4o7m8vxl)
+
 ### Manage State Across the Tree
 
 You often want to pass state properties down to other children in order for them to behave properly. Some times, however, this tree is very deep and it might be inefficient to go through the whole tree (and thereby updating it) to pass a value down.
