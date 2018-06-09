@@ -23,8 +23,7 @@
     "microbundle": "^0.4.4",
     "prettier": "^1.13.4",
     "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-test-renderer": "^16.4.0"
+    "react-dom": "^16.4.0"
   },
   "peerDependencies": {
     "react": "^16.4.0"
