@@ -26,11 +26,11 @@
 
 ---
 
-A number of solutions to manage state in React applications are based on the concept of "reducer" – a function that transforms the state of the application in response to actions. An example is the [Redux][] library and architectures like [Flux][]. 
+A number of solutions to manage state in React applications are based on the concept of "reducer" – a function that transforms the state of the application in response to actions. An example is the [Redux][] library and architectures like [Flux][].
 
 Most recently this pattern was implemented in [ReasonReact][] as the built-in solution to manage local component state. Similarly to Redux, ReasonReact components implement a reducer and actions to trigger state changes. Stateful components are usually referred as "reducer component".
 
-*ReComponent* borrows these ideas from ReasonReact and brings reducer components to the React ecosystem.
+_ReComponent_ borrows these ideas from ReasonReact and brings reducer components to the React ecosystem.
 
 A reducer component is used like a regular, stateful, React component with the added twist that `setState` is not allowed. Instead, state is updated through a `reducer` which is triggered by sending actions to it.
 
