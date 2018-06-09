@@ -98,7 +98,7 @@ ReComponent comes with four different types of [effects](https://github.com/phil
 
 - `NoUpdate()` signalize that nothing should happen.
 - `Update(state)` update the state.
-- `SideEffects(fn)` run an arbitrary function which has [side effect]s. Side effects may never be run directly inside the reducer. **A reducer should always be pure**: for the same action applied onto the same state, it should return the same effects. **This to avoid bugs when React will work asynchronously**.
+- `SideEffects(fn)` run an arbitrary function which has [side effect]s. Side effects may never be run directly inside the reducer. **A reducer should always be pure**: for the same action applied onto the same state, it should return the same effects. **This is to avoid bugs when React will work asynchronously**.
 - `UpdateWithSideEffects(state, fn)` both update the state and then trigger the side effect.
 
 By intelligently using any of the four types above, it is possible to transition between states in one place and without the need to use `setState()` manually. This drastically simplifies our mental model since changes must always go through the reducer first.
@@ -235,9 +235,9 @@ class Counter extends ReComponent {
 
 ### Manage State Across the Tree
 
-Often times we want to pass state properties to descendants that are too far deep in the application tree. In order to do so the components in between need to pass those properties to their respective children until we reach the desidered component. This pattern is usually called [prop drilling](https://blog.kentcdodds.com/prop-drilling-bb62e02cb691).
+Often times we want to pass state properties to descendants that are very deep in the application tree. In order to do so, the components in between need to pass those properties to their respective children until we reach the desired component. This pattern is usually called [prop drilling](https://blog.kentcdodds.com/prop-drilling-bb62e02cb691) and it is usually what you want to do.
 
-Fortunately, React 16.3.0 introduced a new API called [`createContext()`](https://reactjs.org/docs/context.html#reactcreatecontext) that we can use to solve this issue by using context to pass those properties directly to the target component.
+Sometimes, however, the layers in-between are expensive to re-render causing your application to become janky. Fortunately, React 16.3.0 introduced a new API called [`createContext()`](https://reactjs.org/docs/context.html#reactcreatecontext) that we can use to solve this issue by using context to pass those properties directly to the target component and skipping the update of all intermediate layers:
 
 ```js
 import React from "react";
@@ -436,7 +436,6 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 [MIT](https://github.com/philipp-spiess/react-recomponent/blob/master/README.md)
 
 [redux]: https://github.com/reduxjs/redux
-[reason]: https://reasonml.github.io/
 [reasonreact]: https://reasonml.github.io/reason-react/docs/en/state-actions-reducer.html
 [flux]: https://facebook.github.io/flux/
 [side effect]: https://en.wikipedia.org/wiki/Side_effect_(computer_science)
