@@ -26,9 +26,13 @@
 
 ---
 
-There are numerous solutions to managing state in React including powerful libraries like [Redux][] and architectures like [Flux] which evolves around the concept of a "reducer": A single handler for all actions in one store. Recent development of [Reason][] builds upon this concepts and integrates it tightly into [ReasonReact][] by the use of a "reducer component".
+A number of solutions to manage state in React applications are based on the concept of "reducer" – a function that transforms the state of the application in response to actions. An example is the [Redux][] library and architectures like [Flux][]. 
 
-A reducer component is used like a regular, stateful, React component with the added twist that `setState` is not allowed. Instead, state is updated through a `reducer` which is triggered by sending actions to it. ReComponent brings this concept to your React application today.
+Most recently this pattern was implemented in [ReasonReact][] as the built-in solution to manage local component state. Similarly to Redux, ReasonReact components implement a reducer and actions to trigger state changes. Stateful components are usually referred as "reducer component".
+
+*ReComponent* borrows these ideas from ReasonReact and brings reducer components to the React ecosystem.
+
+A reducer component is used like a regular, stateful, React component with the added twist that `setState` is not allowed. Instead, state is updated through a `reducer` which is triggered by sending actions to it.
 
 - [Installation](#installation)
 - [Getting Started](#getting-started)
@@ -47,7 +51,9 @@ npm install react-recomponent --save
 
 ## Getting Started
 
-Using `ReComponent` works in the same way as using a regular React component. State is usually initialized using the `initialState()` callback and can only be modified by sending actions to the `reducer()` function. To help with that, you can use `createSender()`. Take a look at a simple counter example:
+To create a reducer component extend `ReComponent` from `react-recomponent` instead of `React.Component`.
+
+With `ReComponent` state is usually initialized using the `initialState()` callback and can only be modified by sending actions to the `reducer()` function. To help with that, you can use `createSender()`. Take a look at a simple counter example:
 
 ```js
 import React from "react";
@@ -84,18 +90,18 @@ class Counter extends ReComponent {
 
 [![Edit ReComponent - Getting Started](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zq0210299x)
 
-The `Counter` component starts with an initial state of `{ count: 0 }`. Note that this state is in fact a regular React component state. To update it, we use a click action which we identify by its type `"CLICK"` (This is similar to the way we actions are identified in Redux).
+The `Counter` component starts with an initial state of `{ count: 0 }`. Note that this state is in fact a regular React component state. To update it, we use a click action which we identify by its type `"CLICK"` (this is similar to the way actions are identified in Redux).
 
 The `reducer` will receive this action and act accordingly. In our case, it will return an `Update()` effect with the modified state.
 
 ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects):
 
-- `NoUpdate()` to signalize that nothing should happen.
-- `Update(state)` to update the state.
-- `SideEffects(fn)` to run an arbitrary function to issue a [side effect]. Side effects may never be run directly inside the reducer. A reducer should always be pure: For the same action applied onto the same state, it should return the same effects. This paves the way to future react features like async React and make it easier to maintain your code.
-- `UpdateWithSideEffects(state, fn)` to do both: update the state and then trigger the side effect.
+- `NoUpdate()` signalize that nothing should happen.
+- `Update(state)` update the state.
+- `SideEffects(fn)` run an arbitrary function which has [side effect]s. Side effects may never be run directly inside the reducer. **A reducer should always be pure**: for the same action applied onto the same state, it should return the same effects. **This to avoid bugs when React will work asynchronously**.
+- `UpdateWithSideEffects(state, fn)` both update the state and then trigger the side effect.
 
-By intelligently returning any of the four types, it is possible to transition between states at one place and without the need to use `setState()` manually which drastically simplifies our mental model: Whatever happens, it must go through the reducer first.
+By intelligently using any of the four types above, it is possible to transition between states in one place and without the need to use `setState()` manually. This drastically simplifies our mental model since changes must always go through the reducer first.
 
 ## Advanced Usage
 
@@ -103,9 +109,9 @@ Now that we‘ve learned how to use reducer components with React, it‘s time t
 
 ### Side Effects
 
-We‘ve already heard that ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects). This is necessary to affectively handling side effects by keeping your reducer pure (given the same state and action, it will always return the same effects).
+We‘ve already said that ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects). This is necessary to effectively handle side effects by keeping your reducer pure – given the same state and action, it will always return the same effects.
 
-The following example will demonstrate the four different types of effects and shows you how to use them:
+The following example will demonstrate the four different types of effects and show you how to use them:
 
 ```js
 import React from "react";
@@ -170,9 +176,9 @@ class Counter extends ReComponent {
 
 ### Handling Events
 
-React uses a method called pooling to improve performance when emitting events (check out the guides on [`SyntheticEvent`](https://reactjs.org/docs/events.html) to learn more). This means that events that React will trigger will be reused after the callback was handled.
+React uses a method called pooling to improve performance when emitting events (check out the guides on [`SyntheticEvent`](https://reactjs.org/docs/events.html) to learn more). Basically React recycles events once the callback is handled making any reference to them unavailable.
 
-Since the reducer function always runs within the `setState()` callback provided by React, synthetic events will already be recycled. To still be able to access event properties, we recommend passing the required values explicitly. The following example will show the coordinates of the last mouse click. To have control over which properties are sent to the reducer, we‘re using `send` directly in this case:
+Since the reducer function always runs within the `setState()` callback provided by React, synthetic events will already be recycled by the time the reducer is invoked. To be able to access event properties, we recommend passing the required values explicitly. The following example will show the coordinates of the last mouse click. To have control over which properties are sent to the reducer, we‘re using `send` directly in this case:
 
 ```js
 import React from "react";
@@ -229,9 +235,9 @@ class Counter extends ReComponent {
 
 ### Manage State Across the Tree
 
-You often want to pass state properties down to other children in order for them to behave properly. Some times, however, this tree is very deep and it might be inefficient to go through the whole tree (and thereby updating it) to pass a value down.
+Often times we want to pass state properties to descendants that are too far deep in the application tree. In order to do so the components in between need to pass those properties to their respective children until we reach the desidered component. This pattern is usually called [prop drilling](https://blog.kentcdodds.com/prop-drilling-bb62e02cb691).
 
-Fortunately, React 16.3.0 introduced a new API called [`createContext()`](https://reactjs.org/docs/context.html#reactcreatecontext) which we can leverage to implement this.
+Fortunately, React 16.3.0 introduced a new API called [`createContext()`](https://reactjs.org/docs/context.html#reactcreatecontext) that we can use to solve this issue by using context to pass those properties directly to the target component.
 
 ```js
 import React from "react";
