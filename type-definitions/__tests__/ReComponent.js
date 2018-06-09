@@ -16,11 +16,7 @@ class UntypedActionTypes extends ReComponent<{}, { count: number }> {
   // $ExpectError
   handleFoo = this.createSender();
 
-  initialState(props) {
-    return {
-      count: 0
-    };
-  }
+  state = { count: 0 };
 
   reducer(action, state) {
     switch (action.type) {
@@ -44,12 +40,8 @@ untypedActionTypes.handleClick(1);
 untypedActionTypes.handleClick({}, {});
 
 class StateMismatch extends ReComponent<{}, { count: number }> {
-  initialState(props) {
-    // $ExpectError
-    return {
-      invalid: "state"
-    };
-  }
+  // $ExpectError
+  state = { invalid: "state" };
 
   reducer(action, state) {
     switch (action.type) {

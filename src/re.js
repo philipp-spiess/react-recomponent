@@ -1,4 +1,3 @@
-import { isImmutable } from "./isImmutable";
 import {
   NO_UPDATE,
   UPDATE,
@@ -38,40 +37,37 @@ export function Re(Component) {
         };
       }
 
-      // Initialize the component state based on the return value. Note that
-      // when `Component#initialState` is not defined, we can still set the
-      // state like any regular Component in the constructor.
-      if (typeof this.initialState === "function") {
-        let initialState = this.initialState(props);
+      // We allow a hidden `Component#initialImmutableState` option to
+      // initialize the component state based on a returned Immutable.js record
+      // type.
+      //
+      // To manage the state, we define a couple of helper methods to make it
+      // work as a regular Component state must always be a plain JavaScript
+      // object.
+      //
+      // To emulate an Immutable.js object, we use a JavaScript object
+      // consisting of only one key: `immutableState`. To make the render method
+      // easier, we also expose `Component#immutableState` to access the
+      // components state since we don't want to overwrite `Component#state`.
+      //
+      // Note that this is unstable API and should not be used.
+      if (typeof this.initialImmutableState === "function") {
+        this.state = {
+          immutableState: this.initialImmutableState(props)
+        };
 
-        // When using ReComponent in combination with Immutable.js to manage the
-        // state, we define a couple of helper methods to make it work as a
-        // regular Component state must always be a plain JavaScript object.
-        //
-        // To emulate an Immutable.js object, we use a JavaScript object
-        // consisting of only one key: `immutableState`. To make the render method
-        // easier, we also expose `Component#immutableState` to access the
-        // components state since we don't want to overwrite `Component#state`.
-        //
-        // We only opt-into this behavior when `Component#initialState` returns an
-        // Immutable.js object.
-        if (isImmutable(initialState)) {
-          initialState = { immutableState: initialState };
-          setState = (updater, callback) => {
-            originalSetState.call(
-              this,
-              (state, props) => ({
-                immutableState: updater(state.immutableState, props)
-              }),
-              callback
-            );
-          };
-          Object.defineProperty(this, "immutableState", {
-            get: () => this.state.immutableState
-          });
-        }
-
-        this.state = initialState;
+        setState = (updater, callback) => {
+          originalSetState.call(
+            this,
+            (state, props) => ({
+              immutableState: updater(state.immutableState, props)
+            }),
+            callback
+          );
+        };
+        Object.defineProperty(this, "immutableState", {
+          get: () => this.state.immutableState
+        });
       }
 
       // Sends an `action` to the reducer. The `reducer` must handle this action

@@ -12,65 +12,47 @@ import {
 
 import { click, withConsoleMock } from "./helpers";
 
-describe("ReComponent", () => {
+describe("ReComponentImmutable", () => {
   let container;
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
   });
 
-  const { Provider, Consumer } = React.createContext();
-
-  class Counter extends React.Component {
-    render() {
-      return (
-        <Consumer>
-          {({ state, handleClick }) => (
-            <button onClick={handleClick}>
-              You’ve clicked this {state.count} times(s)
-            </button>
-          )}
-        </Consumer>
-      );
-    }
-  }
-
-  class DeepTree extends React.Component {
-    render() {
-      return <Counter />;
-    }
-  }
-
-  class Container extends ReComponent {
+  const State = Record({ count: 0 });
+  class Example extends ReComponent {
     constructor() {
       super();
       this.handleClick = this.createSender("CLICK");
-      this.state = { count: 0 };
+    }
+
+    initialImmutableState(props) {
+      return State();
     }
 
     reducer(action, state) {
       switch (action.type) {
         case "CLICK":
-          return Update({ count: state.count + 1 });
+          return Update(state.update("count", count => count + 1));
       }
     }
 
     render() {
       return (
-        <Provider value={{ state: this.state, handleClick: this.handleClick }}>
-          <DeepTree />
-        </Provider>
+        <button onClick={this.handleClick}>
+          You’ve clicked this {this.immutableState.count} times(s)
+        </button>
       );
     }
   }
 
   it("renders the initial state", () => {
-    const instance = ReactDOM.render(<Container />, container);
+    const instance = ReactDOM.render(<Example />, container);
     expect(container.textContent).toEqual("You’ve clicked this 0 times(s)");
   });
 
   it("increases the counter when clicked", () => {
-    const instance = ReactDOM.render(<Container />, container);
+    const instance = ReactDOM.render(<Example />, container);
     click(container.firstChild);
     expect(container.textContent).toEqual("You’ve clicked this 1 times(s)");
   });

@@ -35,12 +35,7 @@ describe("UpdateTypes", () => {
       updateWithSideEffects = this.createSender("UPDATE_WITH_SIDE_EFFECTS");
       invalid = this.createSender("INVALID");
       unhandled = this.createSender("UNHANDLED");
-    }
-
-    initialState(props) {
-      return {
-        count: 0
-      };
+      this.state = { count: 0 };
     }
 
     reducer(action, state) {

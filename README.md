@@ -53,7 +53,7 @@ npm install react-recomponent --save
 
 To create a reducer component extend `ReComponent` from `react-recomponent` instead of `React.Component`.
 
-With `ReComponent` state is usually initialized using the `initialState()` callback and can only be modified by sending actions to the `reducer()` function. To help with that, you can use `createSender()`. Take a look at a simple counter example:
+With `ReComponent` state can only be modified by sending actions to the `reducer()` function. To help with that, you can use `createSender()`. Take a look at a simple counter example:
 
 ```js
 import React from "react";
@@ -63,12 +63,7 @@ class Counter extends ReComponent {
   constructor() {
     super();
     this.handleClick = this.createSender("CLICK");
-  }
-
-  initialState(props) {
-    return {
-      count: 0
-    };
+    this.state = { count: 0 };
   }
 
   reducer(action, state) {
@@ -132,12 +127,7 @@ class Counter extends ReComponent {
     this.handleUpdateWithSideEffects = this.createSender(
       "UPDATE_WITH_SIDE_EFFECTS"
     );
-  }
-
-  initialState(props) {
-    return {
-      count: 0
-    };
+    this.state = { count: 0 };
   }
 
   reducer(action, state) {
@@ -188,10 +178,7 @@ class Counter extends ReComponent {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
-  }
-
-  initialState(props) {
-    return { x: 0, y: 0 };
+    this.state = { x: 0, y: 0 };
   }
 
   handleClick(event) {
@@ -269,12 +256,7 @@ class Container extends ReComponent {
   constructor() {
     super();
     this.handleClick = this.createSender("CLICK");
-  }
-
-  initialState(props) {
-    return {
-      count: 0
-    };
+    this.state = { count: 0 };
   }
 
   reducer(action, state) {
@@ -313,12 +295,7 @@ type State = { count: number };
 
 class UntypedActionTypes extends ReComponent<Props, State> {
   handleClick = this.createSender("CLICK");
-
-  initialState(props) {
-    return {
-      count: 0
-    };
-  }
+  state = { count: 0 };
 
   reducer(action, state) {
     switch (action.type) {
@@ -351,12 +328,7 @@ type ActionTypes = "CLICK";
 
 class TypedActionTypes extends ReComponent<Props, State, ActionTypes> {
   handleClick = this.createSender("CLICK");
-
-  initialState(props) {
-    return {
-      count: 0
-    };
-  }
+  state = { count: 0 };
 
   reducer(action, state) {
     switch (action.type) {
@@ -389,10 +361,6 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 ### Classes
 
 - `ReComponent`
-
-  - `initialState(props): state`
-
-    Initialize the state of the component based on its props.
 
   - `reducer(action, state): effect`
 

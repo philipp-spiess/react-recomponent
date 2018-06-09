@@ -22,12 +22,7 @@ describe("RePureComponent", () => {
     constructor() {
       super();
       this.handleClick = this.createSender("CLICK");
-    }
-
-    initialState(props) {
-      return {
-        count: 0
-      };
+      this.state = { count: 0 };
     }
 
     reducer(action, state) {
