@@ -76,6 +76,8 @@ export function Re(Component) {
       //
       // To avoid defining functions that call `ReComponent#send` in the render
       // method, we also expose a convenience method: `ReComponent#createSender`.
+      //
+      // @see https://git.io/vh2AY
       this.send = action => {
         let sideEffects;
 
