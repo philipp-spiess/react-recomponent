@@ -19,10 +19,12 @@ describe("UpdateTypes", () => {
     sideEffects,
     updateWithSideEffects,
     invalid,
-    unhandled;
+    unhandled,
+    numberOfRenders;
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
+    numberOfRenders = 0;
     sideEffectSpy = jest.fn();
   });
 
@@ -58,6 +60,9 @@ describe("UpdateTypes", () => {
     }
 
     render() {
+      // We use this to assert that certain effects do not re-render the state.
+      numberOfRenders++;
+
       return (
         <React.Fragment>
           You’ve clicked {this.state.count} times(s)
@@ -66,32 +71,64 @@ describe("UpdateTypes", () => {
     }
   }
 
-  it("NoUpdate", () => {
-    const instance = ReactDOM.render(<ReducerReturns />, container);
-    noUpdate();
-    expect(container.textContent).toEqual("You’ve clicked 0 times(s)");
-    expect(sideEffectSpy).not.toHaveBeenCalled();
+  describe("NoUpdate", () => {
+    it("does not update the state", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      noUpdate();
+      expect(container.textContent).toEqual("You’ve clicked 0 times(s)");
+      expect(sideEffectSpy).not.toHaveBeenCalled();
+    });
+
+    it("does not re-render", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      noUpdate();
+      expect(numberOfRenders).toEqual(1);
+    });
   });
 
-  it("Update", () => {
-    const instance = ReactDOM.render(<ReducerReturns />, container);
-    update();
-    expect(container.textContent).toEqual("You’ve clicked 1 times(s)");
-    expect(sideEffectSpy).not.toHaveBeenCalled();
+  describe("Update", () => {
+    it("updates the state", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      update();
+      expect(container.textContent).toEqual("You’ve clicked 1 times(s)");
+      expect(sideEffectSpy).not.toHaveBeenCalled();
+    });
+
+    it("re-renders", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      update();
+      expect(numberOfRenders).toEqual(2);
+    });
   });
 
-  it("SideEffects", () => {
-    const instance = ReactDOM.render(<ReducerReturns />, container);
-    sideEffects();
-    expect(container.textContent).toEqual("You’ve clicked 0 times(s)");
-    expect(sideEffectSpy).toHaveBeenCalled();
+  describe("SideEffects", () => {
+    it("does not update the state but triggers the side effect", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      sideEffects();
+      expect(container.textContent).toEqual("You’ve clicked 0 times(s)");
+      expect(sideEffectSpy).toHaveBeenCalled();
+    });
+
+    it("does not re-render", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      sideEffects();
+      expect(numberOfRenders).toEqual(1);
+    });
   });
 
-  it("UpdateWithSideEffects", () => {
-    const instance = ReactDOM.render(<ReducerReturns />, container);
-    updateWithSideEffects();
-    expect(container.textContent).toEqual("You’ve clicked 1 times(s)");
-    expect(sideEffectSpy).toHaveBeenCalled();
+  describe("UpdateWithSideEffects", () => {
+    it("updates the state and triggers the side effect", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      updateWithSideEffects();
+      expect(container.textContent).toEqual("You’ve clicked 1 times(s)");
+      expect(sideEffectSpy).toHaveBeenCalled();
+    });
+
+    it("re-renders", () => {
+      const instance = ReactDOM.render(<ReducerReturns />, container);
+      updateWithSideEffects();
+      expect(numberOfRenders).toEqual(2);
+    });
   });
 
   it("throws when an invalid value was returned", () => {

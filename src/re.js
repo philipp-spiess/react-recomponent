@@ -99,11 +99,13 @@ export function Re(Component) {
 
           switch (reduced.type) {
             case NO_UPDATE:
+              state = null;
               break;
             case UPDATE:
               state = reduced.state;
               break;
             case SIDE_EFFECTS:
+              state = null;
               sideEffects = reduced.sideEffects;
               break;
             case UPDATE_WITH_SIDE_EFFECTS:
