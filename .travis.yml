@@ -9,3 +9,4 @@ script:
   - "yarn prettier --list-different"
   - "yarn test:types:flow"
   - "codecov"
+cache: yarn
