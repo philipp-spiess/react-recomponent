@@ -36,7 +36,7 @@ A reducer component is used like a regular, stateful, React component with the d
 
 - [Installation](#installation)
 - [Getting Started](#getting-started)
-- [Advantages Over `setState`](#advantages-over-setstate)
+- [FAQ](#faq)
 - [Advanced Usage](#advanced-usage)
   - [Side Effects](#side-effects)
   - [Handling Events](#handling-events)
@@ -67,7 +67,7 @@ class Counter extends ReComponent {
     this.state = { count: 0 };
   }
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
@@ -99,7 +99,9 @@ ReComponent comes with four different types of [effects](https://github.com/phil
 
 By intelligently using any of the four types above, it is possible to transition between states in one place and without the need to use `setState()` manually. This drastically simplifies our mental model since changes must always go through the reducer first.
 
-## Advantages Over `setState`
+## FAQ
+
+### Advantages Over `setState`
 
 The advantages are similar to those of [Redux](https://github.com/reduxjs/redux) or really any state management tool:
 
@@ -108,6 +110,14 @@ The advantages are similar to those of [Redux](https://github.com/reduxjs/redux)
 2.  Improved **maintainability** by forcing a structure. With [Redux](https://github.com/reduxjs/redux) or [ReComponent](https://github.com/philipp-spiess/react-recomponent), you have a good overview of all actions that your application can send. This is an amazing property and allows others to easily understand what a component is is (actually) doing. While you can already learn so much by looking at the shape of the state object, you’ll lean even more just by _looking at the action types alone_. And since it’s not allowed to use setState at all, you can also be certain that all the code inside the reducer is the only place that transforms your state.
 
 3.  Get rid of side effects with **Pure State Transformation**. By keeping your state changes side effect free, you’re forced into writing code that is easier to test (given an action and a state, it must _always_ return the same new state). Plus you can build extended event sourcing features on top of that since you can easily store all actions that where send to your reducers and replay them later (to go back in time and see exactly how an invalid state occurred).
+
+### Why is the reducer `static`?
+
+To fully leverage all of the advantages outlined above, the reducer function must not have any side effects. Making the reducer `static` will enforce this behavior since you won’t have access to `this` inside the function. We identified three situations that could need `this` inside the reducer:
+
+1.  You’re about to read class properties. In this case, make sure those properties are properly encapsulated in the state object.
+2.  You’re about to write class properties. This is a side effect and should be handled using the `SideEffects(fn)` effect.
+3.  You’re accessing a function that is pure by itself. In this case, the function does not need to be a class property but can be a regular module function instead.
 
 ## Advanced Usage
 
@@ -141,7 +151,7 @@ class Counter extends ReComponent {
     this.state = { count: 0 };
   }
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "NO_UPDATE":
         return NoUpdate();
@@ -202,7 +212,7 @@ class Counter extends ReComponent {
     });
   }
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({
@@ -270,7 +280,7 @@ class Container extends ReComponent {
     this.state = { count: 0 };
   }
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
@@ -308,7 +318,7 @@ class UntypedActionTypes extends ReComponent<Props, State> {
   handleClick = this.createSender("CLICK");
   state = { count: 0 };
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
@@ -341,7 +351,7 @@ class TypedActionTypes extends ReComponent<Props, State, ActionTypes> {
   handleClick = this.createSender("CLICK");
   state = { count: 0 };
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
@@ -373,7 +383,7 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
 - `ReComponent`
 
-  - `reducer(action, state): effect`
+  - `static reducer(action, state): effect`
 
     Translates an action into an effect. This is the main place to update your component‘s state.
 
@@ -402,13 +412,13 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
   Returning this effect will update the state. Internally, this will use `setState()` with an updater function.
 
-- `SideEffects(fn)`
+- `SideEffects(this => mixed)`
 
-  Enqueues side effects to be run but will not update the component‘s state.
+  Enqueues side effects to be run but will not update the component‘s state. The side effect will be called with a reference to the react component (`this`) as the first argument.
 
-- `UpdateWithSideEffects(state, fn)`
+- `UpdateWithSideEffects(state, this => mixed)`
 
-  Updates the component‘s state and _then_ calls the side effect function.
+  Updates the component‘s state and _then_ calls the side effect function.The side effect will be called with a reference to the react component (`this`) as the first argument.
 
 ## License
 

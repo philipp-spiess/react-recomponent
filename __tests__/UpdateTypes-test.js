@@ -40,17 +40,18 @@ describe("UpdateTypes", () => {
       this.state = { count: 0 };
     }
 
-    reducer(action, state) {
+    static reducer(action, state) {
       switch (action.type) {
         case "NO_UPDATE":
           return NoUpdate();
         case "UPDATE":
           return Update({ count: state.count + 1 });
         case "SIDE_EFFECTS":
-          return SideEffects(() => sideEffectSpy());
+          return SideEffects(sideEffectSpy);
         case "UPDATE_WITH_SIDE_EFFECTS":
-          return UpdateWithSideEffects({ count: state.count + 1 }, () =>
-            sideEffectSpy()
+          return UpdateWithSideEffects(
+            { count: state.count + 1 },
+            sideEffectSpy
           );
         case "INVALID":
           return {};
@@ -106,7 +107,7 @@ describe("UpdateTypes", () => {
       const instance = ReactDOM.render(<ReducerReturns />, container);
       sideEffects();
       expect(container.textContent).toEqual("You’ve clicked 0 times(s)");
-      expect(sideEffectSpy).toHaveBeenCalled();
+      expect(sideEffectSpy).toHaveBeenCalledWith(instance);
     });
 
     it("does not re-render", () => {
@@ -121,7 +122,7 @@ describe("UpdateTypes", () => {
       const instance = ReactDOM.render(<ReducerReturns />, container);
       updateWithSideEffects();
       expect(container.textContent).toEqual("You’ve clicked 1 times(s)");
-      expect(sideEffectSpy).toHaveBeenCalled();
+      expect(sideEffectSpy).toHaveBeenCalledWith(instance);
     });
 
     it("re-renders", () => {

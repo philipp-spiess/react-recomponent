@@ -7,19 +7,18 @@
 import * as React from "react";
 
 declare opaque type UpdateType;
-declare type fn = () => mixed;
 
 export type Sender<AT, A = mixed> = (a: A) => { action: AT, payload: A };
 
 declare export function NoUpdate(): {| type: UpdateType |};
 declare export function Update<S>(state: S): {| type: UpdateType, state: S |};
-declare export function SideEffects(
-  sideEffects: fn
-): {| type: UpdateType, sideEffects: fn |};
-declare export function UpdateWithSideEffects<S>(
+declare export function SideEffects<T>(
+  sideEffects: (T) => mixed
+): {| type: UpdateType, sideEffects: T => mixed |};
+declare export function UpdateWithSideEffects<S, T>(
   state: S,
-  sideEffects: fn
-): {| type: UpdateType, state: S, sideEffects: fn |};
+  sideEffects: (T) => mixed
+): {| type: UpdateType, state: S, sideEffects: T => mixed |};
 
 declare export class ReComponent<
   Props,
@@ -28,14 +27,14 @@ declare export class ReComponent<
 > extends React.Component<Props, State> {
   initialState(props: Props): State;
 
-  reducer(
+  static reducer(
     action: { type: ActionType },
     state: State
   ):
     | {| type: UpdateType |}
     | {| type: UpdateType, state: $Shape<State> |}
-    | {| type: UpdateType, sideEffects: fn |}
-    | {| type: UpdateType, state: $Shape<State>, sideEffects: fn |};
+    | {| type: UpdateType, sideEffects: ($Subtype<ReComponent<Props, State, ActionType>>) => mixed |}
+    | {| type: UpdateType, state: $Shape<State>, sideEffects: ($Subtype<ReComponent<Props, State, ActionType>>) => mixed |};
 
   send(action: { type: ActionType, payload?: mixed }): void;
 

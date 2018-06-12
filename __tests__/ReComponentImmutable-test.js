@@ -30,7 +30,7 @@ describe("ReComponentImmutable", () => {
       return State();
     }
 
-    reducer(action, state) {
+    static reducer(action, state) {
       switch (action.type) {
         case "CLICK":
           return Update(state.update("count", count => count + 1));
