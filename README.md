@@ -188,6 +188,16 @@ class Counter extends ReComponent {
 All side effect callbacks get a reference to the react component passed as the first argument. This is helpful when a side effect needs to send other actions to the reducer. The next example shows how you can leverage this to handle a more complex component that fetches data from a third party and has to handle multiple states:
 
 ```js
+import React from "react";
+import {
+  ReComponent,
+  NoUpdate,
+  Update,
+  UpdateWithSideEffects
+} from "react-recomponent";
+
+import { fetchData } from "./api";
+
 class Fetcher extends ReComponent {
   constructor() {
     super();
