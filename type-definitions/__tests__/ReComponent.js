@@ -18,7 +18,7 @@ class UntypedActionTypes extends ReComponent<{}, { count: number }> {
 
   state = { count: 0 };
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
@@ -43,7 +43,7 @@ class StateMismatch extends ReComponent<{}, { count: number }> {
   // $ExpectError
   state = { invalid: "state" };
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "A":
         return Update({});
@@ -60,16 +60,28 @@ class StateMismatch extends ReComponent<{}, { count: number }> {
 }
 
 class UpdateTypes extends ReComponent<{}, { count: number }> {
-  reducer(action, state) {
+  // Used to test the callback property of SideEffects
+  someClassProperty: number;
+
+  static reducer(action, state) {
     switch (action.type) {
       case "A":
         return NoUpdate();
       case "B":
         return Update({ count: 1 });
       case "C":
-        return SideEffects(() => true);
+        return SideEffects((instance: UpdateTypes) => {
+          instance.someClassProperty = 1;
+          // $ExpectError
+          instance.someClassProperty = "1";
+        });
       default:
-        return UpdateWithSideEffects({ count: 1 }, () => true);
+        return UpdateWithSideEffects({ count: 1 }, (instance: UpdateTypes) => {
+          instance.someClassProperty = 1;
+          // $ExpectError
+          instance.someClassProperty = "1";
+
+        });
     }
   }
 }
@@ -81,7 +93,7 @@ class TypedActionTypes extends ReComponent<{}, { count: number }, "CLICK"> {
   // $ExpectError
   handleBar = this.createSender();
 
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return NoUpdate();
@@ -120,7 +132,7 @@ class ExhaustivelyTypedFailingActionTypes extends ReComponent<
   { count: number },
   "CLICK" | "CLACK"
 > {
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return NoUpdate();
@@ -137,7 +149,7 @@ class ExhaustivelyTypedPassingActionTypes extends ReComponent<
   { count: number },
   "CLICK" | "CLACK"
 > {
-  reducer(action, state) {
+  static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return NoUpdate();

@@ -48,7 +48,7 @@ describe("ReComponent", () => {
       this.state = { count: 0 };
     }
 
-    reducer(action, state) {
+    static reducer(action, state) {
       switch (action.type) {
         case "CLICK":
           return Update({ count: state.count + 1 });

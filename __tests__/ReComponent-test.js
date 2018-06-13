@@ -26,7 +26,7 @@ describe("ReComponent", () => {
       this.state = { count: 0 };
     }
 
-    reducer(action, state) {
+    static reducer(action, state) {
       switch (action.type) {
         case "CLICK":
           return Update({ count: state.count + 1 });
@@ -74,7 +74,7 @@ describe("ReComponent", () => {
         super();
         setState = () => this.setState({ some: "state" });
       }
-      reducer() {}
+      static reducer() {}
       render() {
         return null;
       }
@@ -98,7 +98,7 @@ describe("ReComponent", () => {
           click = this.createSender("CLICK");
         }
 
-        reducer(action, state) {
+        static reducer(action, state) {
           return {};
         }
 
@@ -111,6 +111,38 @@ describe("ReComponent", () => {
       expect(() => click()).not.toThrowError();
     } finally {
       process.env.NODE_ENV = originalNodeEnv;
+    }
+  });
+
+  it("warns when the reducer is not static", () => {
+    let originalWarn = console.warn;
+    try {
+      console.warn = jest.fn();
+
+      let click;
+      class ClassPropertyReducer extends ReComponent {
+        constructor() {
+          super();
+          click = this.createSender("CLICK");
+        }
+
+        reducer(action, state) {
+          return NoUpdate();
+        }
+
+        render() {
+          return null;
+        }
+      }
+
+      ReactDOM.render(<ClassPropertyReducer />, container);
+      expect(() => click()).not.toThrowError();
+
+      expect(console.warn).toHaveBeenCalledWith(
+        "ClassPropertyReducer(...): Class property `reducer` methods are deprecated. Please upgrade to `static` reducers instead: https://github.com/philipp-spiess/react-recomponent#why-is-the-reducer-static"
+      );
+    } finally {
+      console.warn = originalWarn;
     }
   });
 });
