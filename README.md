@@ -38,7 +38,7 @@ A reducer component is used like a regular, stateful, React component with the d
 - [Getting Started](#getting-started)
 - [FAQ](#faq)
 - [Advanced Usage](#advanced-usage)
-  - [Side Effects](#side-effects)
+  - [Effects](#effects)
   - [Handling Events](#handling-events)
   - [Manage State Across the Tree](#manage-state-across-the-tree)
   - [Flow](#flow)
@@ -123,7 +123,7 @@ To fully leverage all of the advantages outlined above, the reducer function mus
 
 Now that we‘ve learned how to use reducer components with React, it‘s time to look into more advanced use cases to effectively handle state transitions across bigger portions of your app.
 
-### Side Effects
+### Effects
 
 We‘ve already said that ReComponent comes with four different types of [effects](https://github.com/philipp-spiess/react-recomponent#effects). This is necessary to effectively handle side effects by keeping your reducer pure – given the same state and action, it will always return the same effects.
 
@@ -183,7 +183,60 @@ class Counter extends ReComponent {
 }
 ```
 
-[![Edit ReComponent - Side Effects](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/5x4o7m8vxl)
+[![Edit ReComponent - Effects 1](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/5x4o7m8vxl)
+
+All side effect callbacks get a reference to the react component passed as the first argument. This is helpful when a side effect needs to send other actions to the reducer. The next example shows how you can leverage this to handle a more complex component that fetches data from a third party and has to handle multiple states:
+
+```js
+class Fetcher extends ReComponent {
+  constructor() {
+    super();
+    this.handleRequestStart = this.createSender("REQUEST_START");
+    this.handleRequestSuccess = this.createSender("REQUEST_SUCCESS");
+    this.handleRequestFail = this.createSender("REQUEST_FAIL");
+    this.state = { isFetching: false, result: null };
+  }
+
+  static reducer(action, state) {
+    switch (action.type) {
+      case "REQUEST_START":
+        if (state.isFetching) {
+          return NoUpdate();
+        } else {
+          return UpdateWithSideEffects({ isFetching: true }, instance => {
+            fetchData().then(
+              instance.handleRequestSuccess,
+              instance.handleRequestFail
+            );
+          });
+        }
+      case "REQUEST_SUCCESS":
+        return Update({ result: action.payload, isFetching: false });
+      case "REQUEST_FAIL":
+        return Update({
+          result: "The data could not be fetched. Maybe try again?",
+          isFetching: false
+        });
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <button onClick={this.handleRequestStart}>Fetch</button>
+        <div>
+          {this.state.isFetching && <p>Loading...</p>}
+          <p>
+            {this.state.result ? this.state.result : 'Click "Fetch" to start'}
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+```
+
+[![Edit ReComponent - Effects 2](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/n4pj54y4l)
 
 ### Handling Events
 
