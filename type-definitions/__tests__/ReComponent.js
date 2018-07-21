@@ -11,35 +11,9 @@ import {
   UpdateWithSideEffects
 } from "../../";
 
-class UntypedActionTypes extends ReComponent<{}, { count: number }> {
-  handleClick = this.createSender("CLICK");
-  // $ExpectError
-  handleFoo = this.createSender();
+type Action = {| type: "A" |} | {| type: "B" |} | {| type: "C" |} | {| type: "D" |}
 
-  state = { count: 0 };
-
-  static reducer(action, state) {
-    switch (action.type) {
-      case "CLICK":
-        return Update({ count: state.count + 1 });
-      default:
-        return NoUpdate();
-    }
-  }
-}
-const untypedActionTypes = new UntypedActionTypes();
-untypedActionTypes.send({ type: "CLICK" });
-untypedActionTypes.send({ type: "CLACK" });
-// $ExpectError
-untypedActionTypes.send({});
-
-untypedActionTypes.handleClick();
-untypedActionTypes.handleClick({});
-untypedActionTypes.handleClick(1);
-// $ExpectError
-untypedActionTypes.handleClick({}, {});
-
-class StateMismatch extends ReComponent<{}, { count: number }> {
+class StateMismatch extends ReComponent<{}, { count: number }, Action> {
   // $ExpectError
   state = { invalid: "state" };
 
@@ -50,16 +24,16 @@ class StateMismatch extends ReComponent<{}, { count: number }> {
       case "B":
         return Update({ count: 1 });
       case "C":
-        // $ExpectError
+        // $ExpectError - `count` should be `number`
         return Update({ count: "1" });
       default:
-        // $ExpectError
+        // $ExpectError - `invalid` is missing in State
         return Update({ invalid: "state" });
     }
   }
 }
 
-class UpdateTypes extends ReComponent<{}, { count: number }> {
+class UpdateTypes extends ReComponent<{}, { count: number }, Action> {
   // Used to test the callback property of SideEffects
   someClassProperty: number;
 
@@ -72,13 +46,13 @@ class UpdateTypes extends ReComponent<{}, { count: number }> {
       case "C":
         return SideEffects((instance: UpdateTypes) => {
           instance.someClassProperty = 1;
-          // $ExpectError
+          // $ExpectError - `instance.someClassProperty` has to be number
           instance.someClassProperty = "1";
         });
       default:
         return UpdateWithSideEffects({ count: 1 }, (instance: UpdateTypes) => {
           instance.someClassProperty = 1;
-          // $ExpectError
+          // $ExpectError - `instance.someClassProperty` has to be number
           instance.someClassProperty = "1";
 
         });
@@ -86,12 +60,12 @@ class UpdateTypes extends ReComponent<{}, { count: number }> {
   }
 }
 
-class TypedActionTypes extends ReComponent<{}, { count: number }, "CLICK"> {
-  handleClick = this.createSender("CLICK");
-  // $ExpectError
-  handleFoo = this.createSender("CLACK");
-  // $ExpectError
-  handleBar = this.createSender();
+class TypedActionTypes extends ReComponent<
+  {},
+  { count: number },
+  {| type: 'CLICK' |}
+> {
+  handleClick = () => this.send({ type: 'CLICK' });
 
   static reducer(action, state) {
     switch (action.type) {
@@ -105,16 +79,16 @@ class TypedActionTypes extends ReComponent<{}, { count: number }, "CLICK"> {
 
 const typedActionTypes = new TypedActionTypes();
 typedActionTypes.send({ type: "CLICK" });
-// $ExpectError
+// $ExpectError - "CLACK" is invalid action type
 typedActionTypes.send({ type: "CLACK" });
-// $ExpectError
+// $ExpectError - invalid action
 typedActionTypes.send({});
 
 typedActionTypes.handleClick();
+// $ExpectError - `handleClick` expects no arguments
 typedActionTypes.handleClick({});
+// $ExpectError - `handleClick` expects no arguments
 typedActionTypes.handleClick(1);
-// $ExpectError
-typedActionTypes.handleClick({}, {});
 
 // Flow can verify that we've handled every defined action type for us through
 // what is called [exhaustiveness testing].
@@ -127,27 +101,29 @@ typedActionTypes.handleClick({}, {});
 const absurd = <T>(x: empty): T => {
   throw new Error("absurd");
 };
+
 class ExhaustivelyTypedFailingActionTypes extends ReComponent<
   {},
   { count: number },
-  "CLICK" | "CLACK"
+  {| type: 'CLICK' |} | {| type: 'CLACK' |}
 > {
   static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return NoUpdate();
       default: {
-        // $ExpectError
+        // $ExpectError - should be unreachable
         absurd(action.type);
         return NoUpdate();
       }
     }
   }
 }
+
 class ExhaustivelyTypedPassingActionTypes extends ReComponent<
   {},
   { count: number },
-  "CLICK" | "CLACK"
+  { type: "CLICK" } | { type: "CLACK" }
 > {
   static reducer(action, state) {
     switch (action.type) {
@@ -155,6 +131,55 @@ class ExhaustivelyTypedPassingActionTypes extends ReComponent<
         return NoUpdate();
       case "CLACK":
         return NoUpdate();
+      default: {
+        absurd(action.type);
+        return NoUpdate();
+      }
+    }
+  }
+}
+
+
+class FailingPayloadType extends ReComponent<
+  {},
+  { count: number, awesome: boolean },
+  { type: "CLICK", payload: number } | { type: "CLACK", payload: boolean }
+> {
+  // $ExpectError - `clicks` should be `number`
+  handleClick = (clicks: boolean) => this.send({ type: 'CLICK', payload: clicks });
+  // $ExpectError - `awesome` should be `boolean`
+  handleClack = (awesome: number) => this.send({ type: 'CLACK', payload: awesome });
+
+  static reducer(action, state) {
+    switch (action.type) {
+      case "CLICK":
+        // $ExpectError - `awesome` should be `boolean`, but received `number`
+        return Update({ awesome: action.payload });
+      case "CLACK":
+        // $ExpectError - `count` should be `number`, but received `boolean`
+        return Update({ count: action.payload });
+      default: {
+        absurd(action.type);
+        return NoUpdate();
+      }
+    }
+  }
+}
+
+class PassingPayloadType extends ReComponent<
+  {},
+  { count: number, awesome: boolean },
+  { type: "CLICK", payload: number } | { type: "CLACK", payload: boolean }
+  > {
+  handleClick = (clicks: number) => this.send({ type: 'CLICK', payload: clicks });
+  handleClack = (awesome: boolean) => this.send({ type: 'CLACK', payload: awesome });
+
+  static reducer(action, state) {
+    switch (action.type) {
+      case "CLICK":
+        return Update({ count: action.payload });
+      case "CLACK":
+        return Update({ awesome: action.payload });
       default: {
         absurd(action.type);
         return NoUpdate();

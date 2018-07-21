@@ -22,7 +22,7 @@ describe("ReComponent", () => {
   class Example extends ReComponent {
     constructor() {
       super();
-      this.handleClick = this.createSender("CLICK");
+      this.handleClick = () => this.send({ type: "CLICK" });
       this.state = { count: 0 };
     }
 
@@ -95,7 +95,7 @@ describe("ReComponent", () => {
       class Example extends ReComponent {
         constructor() {
           super();
-          click = this.createSender("CLICK");
+          click = () => this.send({ type: "CLICK" });
         }
 
         static reducer(action, state) {
@@ -123,7 +123,7 @@ describe("ReComponent", () => {
       class ClassPropertyReducer extends ReComponent {
         constructor() {
           super();
-          click = this.createSender("CLICK");
+          click = () => this.send({ type: "CLICK" });
         }
 
         reducer(action, state) {

@@ -88,9 +88,6 @@ export function Re(Component) {
       // and return either `NoUpdate()`, `Update(state)`, `SideEffects(fn)`, or
       // `UpdateWithSideEffects(state, fn)`.
       //
-      // To avoid defining functions that call `ReComponent#send` in the render
-      // method, we also expose a convenience method: `ReComponent#createSender`.
-      //
       // @see https://git.io/vh2AY
       this.send = action => {
         let sideEffects;
@@ -149,24 +146,6 @@ export function Re(Component) {
         };
 
         setState.call(this, updater, () => sideEffects && sideEffects(this));
-      };
-
-      // Convenience method to create sender functions: Functions that send an
-      // action to the reducer. The created actions will follow the naming
-      // conventions of [flux-standard-actions].
-      //
-      // If the sender is called with an argument (like an Event object for an
-      // event callback), the first argument will be exposed as the `payload`.
-      // Note that subsequent arguments to a sender are ignored for now.
-      //
-      // [flux-standard-actions]: https://github.com/redux-utilities/flux-standard-action
-      this.createSender = type => {
-        return payload => {
-          this.send({
-            type,
-            payload
-          });
-        };
       };
     }
   };

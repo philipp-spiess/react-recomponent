@@ -31,12 +31,13 @@ describe("UpdateTypes", () => {
   class ReducerReturns extends ReComponent {
     constructor() {
       super();
-      noUpdate = this.createSender("NO_UPDATE");
-      update = this.createSender("UPDATE");
-      sideEffects = this.createSender("SIDE_EFFECTS");
-      updateWithSideEffects = this.createSender("UPDATE_WITH_SIDE_EFFECTS");
-      invalid = this.createSender("INVALID");
-      unhandled = this.createSender("UNHANDLED");
+      noUpdate = () => this.send({ type: "NO_UPDATE" });
+      update = () => this.send({ type: "UPDATE" });
+      sideEffects = () => this.send({ type: "SIDE_EFFECTS" });
+      updateWithSideEffects = () =>
+        this.send({ type: "UPDATE_WITH_SIDE_EFFECTS" });
+      invalid = () => this.send({ type: "INVALID" });
+      unhandled = () => this.send({ type: "UNHANDLED" });
       this.state = { count: 0 };
     }
 
