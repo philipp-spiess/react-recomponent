@@ -187,3 +187,38 @@ class PassingPayloadType extends ReComponent<
     }
   }
 }
+
+class CreateSenderTest extends ReComponent<
+  {},
+  { count: number },
+  {| type: 'CLICK' |} | {| type: 'CLACK', payload: number |}
+> {
+  handleClick = this.createSender("CLICK");
+  handleClack = this.createSender("CLACK");
+  // $ExpectError - "INVALID" is invalid action type
+  handleFoo = this.createSender("INVALID");
+  // $ExpectError	- invalid action type
+  handleBar = this.createSender();
+
+  static reducer(action, state) {
+    return NoUpdate();
+  }
+}
+
+const createSenderTest = new CreateSenderTest();
+createSenderTest.send({ type: "CLICK" });
+createSenderTest.send({ type: "CLACK", payload: 0 });
+// $ExpectError - "INVALID" is invalid action type
+createSenderTest.send({ type: "INVALID" });
+// $ExpectError - invalid action
+createSenderTest.send({});
+// $ExpectError - invalid payload
+createSenderTest.send({ type: "CLACK", payload: "CLACK" });
+
+// @TODO: Find out how we can assert the payload when using createSender
+createSenderTest.handleClick();
+createSenderTest.handleClick({});
+createSenderTest.handleClick(1);
+createSenderTest.handleClack(3);
+createSenderTest.handleClack();
+createSenderTest.handleClick("sda");
