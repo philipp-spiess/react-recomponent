@@ -21,7 +21,7 @@ declare export function UpdateWithSideEffects<S, T>(
 declare export class ReComponent<
   Props,
   State,
-  Action: { +type: string },
+  Action: { +type: string }
 > extends React.Component<Props, State> {
   initialState(props: Props): State;
 
@@ -39,11 +39,15 @@ declare export class ReComponent<
       |};
 
   send(action: Action): void;
-  createSender<A: Action>(actionType: $ElementType<A, 'type'>): (mixed) => A;
+  createSender<A: Action>(actionType: $ElementType<A, "type">): mixed => A;
 
   // This type is only used when initialState returns an Immutable.js data type.
   // Consider this API unstable.
   +immutableState: State;
 }
 
-declare export class RePureComponent<P, S, A: { +type: string }> extends ReComponent<P, S, A> {}
+declare export class RePureComponent<
+  P,
+  S,
+  A: { +type: string }
+> extends ReComponent<P, S, A> {}
