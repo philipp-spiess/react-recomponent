@@ -380,35 +380,35 @@ import { ReComponent, Update } from "react-recomponent";
 
 type Props = {};
 type State = { count: number, value: string };
-type Action = {| type: "CLICK" |} | {| type: "UPDATE_VALUE", payload: string |};
+type Action = { type: "CLICK" } | { type: "CHANGE", payload: string };
 
 class TypedActions extends ReComponent<Props, State, Action> {
-  // NOTE: we use `this.send` API because it ensures type-safety for action's `payload`
+  // NOTE: We use `this.send()` API because it ensures type-safety for
+  //       an action's `payload`.
   handleClick = () => this.send({ type: "CLICK" });
-  handleUpdateValue = (newValue: string) => this.send({ type: "UPDATE_VALUE", payload: newValue });
+  handleChange = (event: Event) =>
+    this.send({ type: "CHANGE", payload: event.target.value });
 
-  state = { count: 0 };
+  state = { count: 0, value: "" };
 
   static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
-      case "UPDATE_VALUE":
+      case "CHANGE":
         return Update({ value: action.payload });
-      default: {
-        return NoUpdate();
       }
     }
   }
 
   render() {
     return (
-        <React.Fragment>
-          <button onClick={this.handleClick}>
-            You’ve clicked this {this.state.count} times(s)
-          </button>
-          <Input onValueChange={this.handleValueUpdate} />
-        <React.Fragment/>
+      <div>
+        <button onClick={this.handleClick}>
+          You’ve clicked this {this.state.count} times(s)
+        </button>
+        <input value={this.state.value} onChange={this.handleChange} />
+      </div>
     );
   }
 }
