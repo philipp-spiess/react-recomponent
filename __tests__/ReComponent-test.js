@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { ReComponent, NoUpdate, Update } from "../src";
+import { ReComponent, Update } from "../src";
 
 import { click, withConsoleMock } from "./helpers";
 

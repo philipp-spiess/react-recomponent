@@ -1,16 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Record } from "immutable";
 
-import {
-  ReComponent,
-  NoUpdate,
-  Update,
-  SideEffects,
-  UpdateWithSideEffects
-} from "../src";
+import { ReComponent, Update } from "../src";
 
-import { click, withConsoleMock } from "./helpers";
+import { click } from "./helpers";
 
 describe("ReComponent", () => {
   let container;

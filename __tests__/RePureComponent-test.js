@@ -1,15 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import {
-  RePureComponent,
-  NoUpdate,
-  Update,
-  SideEffects,
-  UpdateWithSideEffects
-} from "../src";
+import { RePureComponent, Update } from "../src";
 
-import { click, withConsoleMock } from "./helpers";
+import { click } from "./helpers";
 
 describe("RePureComponent", () => {
   let container;

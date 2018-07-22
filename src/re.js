@@ -38,7 +38,7 @@ export function Re(Component) {
         };
       }
 
-      // We allow a hidden `Component#initialImmutableState` option to
+      // We allow a hidden `Component#unstable_initialImmutableState` option to
       // initialize the component state based on a returned Immutable.js record
       // type.
       //
@@ -52,9 +52,9 @@ export function Re(Component) {
       // components state since we don't want to overwrite `Component#state`.
       //
       // Note that this is unstable API and should not be used.
-      if (typeof this.initialImmutableState === "function") {
+      if (typeof this.unstable_initialImmutableState === "function") {
         this.state = {
-          immutableState: this.initialImmutableState(props)
+          immutableState: this.unstable_initialImmutableState(props)
         };
 
         setState = (updater, callback) => {
@@ -66,7 +66,7 @@ export function Re(Component) {
             callback
           );
         };
-        Object.defineProperty(this, "immutableState", {
+        Object.defineProperty(this, "unstable_immutableState", {
           get: () => this.state.immutableState
         });
       }
