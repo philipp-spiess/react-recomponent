@@ -39,6 +39,7 @@ declare export class ReComponent<
       |};
 
   send(action: Action): void;
+  createSender<A: Action>(actionType: $ElementType<A, 'type'>): (mixed) => A;
 
   // This type is only used when initialState returns an Immutable.js data type.
   // Consider this API unstable.
