@@ -2,4 +2,4 @@
 
 exports[`ReComponent disables \`setState\` 1`] = `"Example(...): Calls to \`setState\` are not allowed. Please use the \`reducer\` method to update the component state"`;
 
-exports[`ReComponent errors when no \`reducer\` method is defined 1`] = `"Example(...): No \`reducer\` method found on the returned component instance: did you define a reducer?"`;
+exports[`ReComponent errors when no \`reducer\` method is defined 1`] = `"Example(...): No static \`reducer\` method found on the returned component instance: did you define a reducer?"`;

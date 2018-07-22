@@ -13,24 +13,11 @@ export function Re(Component) {
       if (process.env.NODE_ENV !== "production") {
         const name = this.displayName || this.constructor.name;
 
-        const isStaticReducer = typeof this.constructor.reducer === "function";
-        const isPropertyReducer = typeof this.reducer === "function";
-
-        // @TODO: Remove property reducer support with v1.0.0
-        if (isPropertyReducer) {
-          console.warn(
-            name +
-              "(...): Class property `reducer` methods are deprecated. Please " +
-              "upgrade to `static` reducers instead: " +
-              "https://github.com/philipp-spiess/react-recomponent#why-is-the-reducer-static"
-          );
-        }
-
-        if (!(isStaticReducer || isPropertyReducer)) {
+        if (typeof this.constructor.reducer !== "function") {
           throw new Error(
             name +
-              "(...): No `reducer` method found on the returned component " +
-              "instance: did you define a reducer?"
+              "(...): No static `reducer` method found on the returned " +
+              "component instance: did you define a reducer?"
           );
         }
       }
@@ -96,12 +83,7 @@ export function Re(Component) {
         let sideEffects;
 
         const updater = state => {
-          let reduced;
-          if (typeof this.reducer === "function") {
-            reduced = this.reducer(action, state);
-          } else {
-            reduced = this.constructor.reducer(action, state);
-          }
+          const reduced = this.constructor.reducer(action, state);
 
           if (process.env.NODE_ENV !== "production") {
             if (typeof reduced === "undefined") {
