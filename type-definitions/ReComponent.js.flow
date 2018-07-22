@@ -43,7 +43,7 @@ declare export class ReComponent<
 
   // This type is only used when initialState returns an Immutable.js data type.
   // Consider this API unstable.
-  +immutableState: State;
+  +unstable_immutableState: $ElementType<State, "immutableState">;
 }
 
 declare export class RePureComponent<

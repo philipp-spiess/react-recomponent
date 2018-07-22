@@ -9,7 +9,7 @@ import {
   UpdateWithSideEffects
 } from "../src";
 
-import { click, withConsoleMock } from "./helpers";
+import { withConsoleMock } from "./helpers";
 
 describe("UpdateTypes", () => {
   let container,
