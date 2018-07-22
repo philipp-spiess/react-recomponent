@@ -1,11 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import {
-  ReComponent,
-  NoUpdate,
-  Update,
-} from "../src";
+import { ReComponent, NoUpdate, Update } from "../src";
 
 import { click, withConsoleMock } from "./helpers";
 
@@ -123,7 +119,7 @@ describe("ReComponent", () => {
           click = () => this.send({ type: "CLICK" });
         }
 
-        static reducer(action, state) {
+        reducer(action, state) {
           return NoUpdate();
         }
 

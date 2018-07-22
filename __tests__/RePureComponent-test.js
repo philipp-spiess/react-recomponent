@@ -21,7 +21,7 @@ describe("RePureComponent", () => {
   class Example extends RePureComponent {
     constructor() {
       super();
-      this.handleClick = () => this.send({ type: "CLICK" });
+      this.handleClick = this.createSender("CLICK");
       this.state = { count: 0 };
     }
 
