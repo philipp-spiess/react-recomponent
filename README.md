@@ -467,6 +467,31 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
   Updates the component‘s state and _then_ calls the side effect function.The side effect will be called with a reference to the react component (`this`) as the first argument.
 
+## Contributing
+
+Every help on this project is greatly appreciated. To get you started, here's a quick guide on how to make good and clean pull-requests:
+
+1.  Create a fork of this [repository](https://github.com/philipp-spiess/react-recomponent), so you can work on your own environment.
+2.  Install development dependencies locally:
+
+    ```bash
+    git clone git@github.com:<your-github-name>/react-recomponent.git
+    cd react-recomponent
+    yarn install
+    ```
+
+3.  Make changes using your favorite editor.
+4.  Make sure that all tests are passing and that the code is formatted correctly:
+
+    ```bash
+    yarn format
+    yarn test
+    yarn test:types:flow
+    ```
+
+5.  Commit your changes ([here](https://chris.beams.io/posts/git-commit/) is a wonderful guide on how to make amazing git commits).
+6.  After a few seconds, a button to create a pull request should be visible inside the [Pull requests](https://github.com/philipp-spiess/react-recomponent/pulls) section.
+
 ## License
 
 [MIT](https://github.com/philipp-spiess/react-recomponent/blob/master/README.md)
