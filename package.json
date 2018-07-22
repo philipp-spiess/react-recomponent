@@ -1,6 +1,6 @@
 {
   "name": "react-recomponent",
-  "version": "0.2.0",
+  "version": "1.0.0-rc.1",
   "main": "dist/react-recomponent.js",
   "umd:main": "dist/react-recomponent.umd.js",
   "module": "dist/react-recomponent.m.js",
@@ -34,7 +34,7 @@
     "format": "yarn prettier --write",
     "test:types:flow": "flow check .",
     "build": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
-    "prepublish": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "jest": {
     "testRegex": "(/__tests__/.*\\-(test))\\.js$",
