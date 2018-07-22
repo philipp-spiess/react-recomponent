@@ -368,56 +368,33 @@ If you‘re having troubles understanding this example, I recommend the fantasti
 
 _[Flow][] is a static type checker for JavaScript. This section is only relevant for you if you‘re using Flow in your application._
 
-ReComponent comes with first class Flow support built in. By default, a ReComponent will behave like a regular Component and will require props and state to be typed:
+ReComponent comes with first class Flow support built in.
+When extending `ReComponent`, in addition to the `Props` and `State` types required by regular `React.Component`
+we need to specify the third generic parameter which should be a union of all actions used by the component.
+This ensures type-safety everywhere in the code of the component where the actions are used and
+even allows [exhaustiveness testing] to verify that every action is indeed handled.
 
 ```js
 import * as React from "react";
 import { ReComponent, Update } from "react-recomponent";
 
 type Props = {};
-type State = { count: number };
+type State = { count: number, value: string };
+type Action = {| type: "CLICK" |} | {| type: "UPDATE_VALUE", payload: string |};
 
-class UntypedActionTypes extends ReComponent<Props, State> {
-  handleClick = this.createSender("CLICK");
+class TypedActions extends ReComponent<Props, State, Action> {
+  // NOTE: we use `this.send` API because it ensures type-safety for action's `payload`
+  handleClick = () => this.send({ type: "CLICK" });
+  handleUpdateValue = (newValue: string) => this.send({ type: "UPDATE_VALUE", payload: newValue });
+
   state = { count: 0 };
 
   static reducer(action, state) {
     switch (action.type) {
       case "CLICK":
         return Update({ count: state.count + 1 });
-      default:
-        return NoUpdate();
-    }
-  }
-
-  render() {
-    return (
-      <button onClick={this.handleClick}>
-        You’ve clicked this {this.state.count} times(s)
-      </button>
-    );
-  }
-}
-```
-
-Without specifying our action types any further, we will allow all `string` values. It is, however, recommended that we type all action types using a union of string literals. This will further tighten the type checks and will even allow [exhaustiveness testing] to verify that every action is indeed handled.
-
-```js
-import * as React from "react";
-import { ReComponent, Update } from "react-recomponent";
-
-type Props = {};
-type State = { count: number };
-type ActionTypes = "CLICK";
-
-class TypedActionTypes extends ReComponent<Props, State, ActionTypes> {
-  handleClick = this.createSender("CLICK");
-  state = { count: 0 };
-
-  static reducer(action, state) {
-    switch (action.type) {
-      case "CLICK":
-        return Update({ count: state.count + 1 });
+      case "UPDATE_VALUE":
+        return Update({ value: action.payload });
       default: {
         return NoUpdate();
       }
@@ -426,9 +403,12 @@ class TypedActionTypes extends ReComponent<Props, State, ActionTypes> {
 
   render() {
     return (
-      <button onClick={this.handleClick}>
-        You’ve clicked this {this.state.count} times(s)
-      </button>
+        <React.Fragment>
+          <button onClick={this.handleClick}>
+            You’ve clicked this {this.state.count} times(s)
+          </button>
+          <Input onValueChange={this.handleValueUpdate} />
+        <React.Fragment/>
     );
   }
 }
@@ -438,7 +418,11 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
 
 **Known Limitations With Flow:**
 
-- While it is possible to exhaustively type check the reducer, Flow will still require every branch to return an effect. This is why the above examples returns `NoUpdate()` even though the branch can never be reached.
+- `this.send` API for sending actions is preferred over `this.createSender`. This is because `this.createSender`
+  effectively types the payload as `any` (limitation we can't overcome for now), whereas `this.send` provides full type-safety
+  for actions
+- While it is possible to exhaustively type check the reducer, Flow will still require every branch to return an effect.
+  This is why the above examples returns `NoUpdate()` even though the branch can never be reached.
 
 ## API Reference
 

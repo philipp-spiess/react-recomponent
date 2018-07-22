@@ -8,8 +8,6 @@ import * as React from "react";
 
 declare opaque type UpdateType;
 
-export type Sender<AT, A = mixed> = (a: A) => { action: AT, payload: A };
-
 declare export function NoUpdate(): {| type: UpdateType |};
 declare export function Update<S>(state: S): {| type: UpdateType, state: S |};
 declare export function SideEffects<T>(
@@ -22,13 +20,13 @@ declare export function UpdateWithSideEffects<S, T>(
 
 declare export class ReComponent<
   Props,
-  State = void,
-  ActionType = string
+  State,
+  Action: { +type: string },
 > extends React.Component<Props, State> {
   initialState(props: Props): State;
 
   static reducer(
-    action: { type: ActionType },
+    action: Action,
     state: State
   ):
     | {| type: UpdateType |}
@@ -40,13 +38,12 @@ declare export class ReComponent<
         sideEffects: ($Subtype<this>) => mixed
       |};
 
-  send(action: { type: ActionType, payload?: mixed }): void;
-
-  createSender<AT: ActionType>(actionType: ActionType): Sender<AT>;
+  send(action: Action): void;
+  createSender<A: Action>(actionType: $ElementType<A, 'type'>): (mixed) => A;
 
   // This type is only used when initialState returns an Immutable.js data type.
   // Consider this API unstable.
   +immutableState: State;
 }
 
-declare export class RePureComponent<P, S, A> extends ReComponent<P, S, A> {}
+declare export class RePureComponent<P, S, A: { +type: string }> extends ReComponent<P, S, A> {}

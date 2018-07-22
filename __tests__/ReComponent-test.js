@@ -1,14 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Record } from "immutable";
 
-import {
-  ReComponent,
-  NoUpdate,
-  Update,
-  SideEffects,
-  UpdateWithSideEffects
-} from "../src";
+import { ReComponent, NoUpdate, Update } from "../src";
 
 import { click, withConsoleMock } from "./helpers";
 
@@ -95,7 +88,7 @@ describe("ReComponent", () => {
       class Example extends ReComponent {
         constructor() {
           super();
-          click = this.createSender("CLICK");
+          click = () => this.send({ type: "CLICK" });
         }
 
         static reducer(action, state) {
@@ -123,7 +116,7 @@ describe("ReComponent", () => {
       class ClassPropertyReducer extends ReComponent {
         constructor() {
           super();
-          click = this.createSender("CLICK");
+          click = () => this.send({ type: "CLICK" });
         }
 
         reducer(action, state) {

@@ -44,7 +44,7 @@ describe("ReComponent", () => {
   class Container extends ReComponent {
     constructor() {
       super();
-      this.handleClick = this.createSender("CLICK");
+      this.handleClick = () => this.send({ type: "CLICK" });
       this.state = { count: 0 };
     }
 

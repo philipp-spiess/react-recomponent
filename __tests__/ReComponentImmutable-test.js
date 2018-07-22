@@ -23,7 +23,7 @@ describe("ReComponentImmutable", () => {
   class Example extends ReComponent {
     constructor() {
       super();
-      this.handleClick = this.createSender("CLICK");
+      this.handleClick = () => this.send({ type: "CLICK" });
     }
 
     initialImmutableState(props) {
