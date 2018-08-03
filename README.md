@@ -99,6 +99,10 @@ ReComponent comes with four different types of [effects](https://github.com/phil
 
 By intelligently using any of the four types above, it is possible to transition between states in one place and without the need to use `setState()` manually. This drastically simplifies our mental model since changes must always go through the reducer first.
 
+**NOTE!**
+You should NEVER call `this.send` or any sender in **`componentWillUnmount`**.
+If you need to execute a side-effect in **`componentWillUnmount`** (e.g. clear a timer) call that side-effect directly.
+
 ## FAQ
 
 ### Advantages Over `setState`
