@@ -103,7 +103,6 @@ By intelligently using any of the four types above, it is possible to transition
 You should NEVER call `this.send` or any sender in **`componentWillUnmount`**.
 If you need to execute a side-effect in **`componentWillUnmount`** (e.g. clear a timer) call that side-effect directly.
 
-
 ## FAQ
 
 ### Advantages Over `setState`
