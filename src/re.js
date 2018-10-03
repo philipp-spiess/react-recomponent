@@ -22,11 +22,7 @@ export function Re(Component) {
         }
       }
 
-      // We might overwrite setState later for the Immutable.js helpers, thus we
-      // keep a reference to the original method around as well.
-      const originalSetState = this.setState;
       let setState = this.setState;
-
       if (process.env.NODE_ENV !== "production") {
         this.setState = () => {
           const name = this.displayName || this.constructor.name;
@@ -36,39 +32,6 @@ export function Re(Component) {
               "`reducer` method to update the component state"
           );
         };
-      }
-
-      // We allow a hidden `Component#unstable_initialImmutableState` option to
-      // initialize the component state based on a returned Immutable.js record
-      // type.
-      //
-      // To manage the state, we define a couple of helper methods to make it
-      // work as a regular Component state must always be a plain JavaScript
-      // object.
-      //
-      // To emulate an Immutable.js object, we use a JavaScript object
-      // consisting of only one key: `immutableState`. To make the render method
-      // easier, we also expose `Component#immutableState` to access the
-      // components state since we don't want to overwrite `Component#state`.
-      //
-      // Note that this is unstable API and should not be used.
-      if (typeof this.unstable_initialImmutableState === "function") {
-        this.state = {
-          immutableState: this.unstable_initialImmutableState(props)
-        };
-
-        setState = (updater, callback) => {
-          originalSetState.call(
-            this,
-            (state, props) => ({
-              immutableState: updater(state.immutableState, props)
-            }),
-            callback
-          );
-        };
-        Object.defineProperty(this, "unstable_immutableState", {
-          get: () => this.state.immutableState
-        });
       }
 
       // Sends an `action` to the reducer. The `reducer` must handle this action
