@@ -18,6 +18,7 @@
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "dtslint": "^0.3.0",
     "flow-bin": "^0.82.0",
     "jest": "^23.6.0",
     "microbundle": "^0.6.0",
@@ -30,9 +31,11 @@
     "react": "^16.4.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "npm-run-all test:js build -p test:types:*",
     "prettier": "prettier {{__tests__,src,type-definitions}/**.{js,flow},README.md}",
     "format": "yarn prettier --write",
+    "test:js": "jest",
+    "test:types:ts": "tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
     "test:types:flow": "flow check .",
     "build": "run-p bundle:*",
     "bundle:dist": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
