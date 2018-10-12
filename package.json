@@ -31,14 +31,14 @@
     "react": "^16.4.0"
   },
   "scripts": {
-    "test": "npm-run-all test:js build -p test:types:*",
+    "test": "run-p test:js test:types:*",
     "prettier": "prettier {{__tests__,src,type-definitions}/**.{js,flow},README.md}",
-    "format": "yarn prettier --write",
+    "format": "prettier --write",
     "test:js": "jest",
-    "test:types:ts": "tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
+    "test:types:ts": "yarn build && tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
     "test:types:flow": "flow check .",
     "build": "run-p bundle:*",
-    "bundle:dist": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
+    "bundle:dist": "microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
     "bundle:types": "cp type-definitions/ReComponent.d.ts dist/react-recomponent.d.ts",
     "prepublishOnly": "yarn build"
   },
