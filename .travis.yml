@@ -5,8 +5,9 @@ install:
   - "yarn global add codecov"
   - "yarn install --freeze-lockfile"
 script:
-  - "yarn test --coverage"
+  - "yarn test:js --coverage"
   - "yarn prettier --list-different"
   - "yarn test:types:flow"
+  - "yarn test:types:ts"
   - "codecov"
 cache: yarn

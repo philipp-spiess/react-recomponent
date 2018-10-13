@@ -2,6 +2,7 @@
   "name": "react-recomponent",
   "version": "1.0.0-rc.2",
   "main": "dist/react-recomponent.js",
+  "typings": "dist/react-recomponent.d.ts",
   "umd:main": "dist/react-recomponent.umd.js",
   "module": "dist/react-recomponent.m.js",
   "source": "src/index.js",
@@ -17,9 +18,11 @@
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "dtslint": "^0.3.0",
     "flow-bin": "^0.82.0",
     "jest": "^23.6.0",
     "microbundle": "^0.6.0",
+    "npm-run-all": "^4.1.3",
     "prettier": "^1.14.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
@@ -28,11 +31,15 @@
     "react": "^16.4.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "run-p test:js test:types:*",
     "prettier": "prettier {{__tests__,src,type-definitions}/**.{js,flow},README.md}",
-    "format": "yarn prettier --write",
+    "format": "prettier --write",
+    "test:js": "jest",
+    "test:types:ts": "yarn build && tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
     "test:types:flow": "flow check .",
-    "build": "yarn microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
+    "build": "run-p bundle:*",
+    "bundle:dist": "microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
+    "bundle:types": "cp type-definitions/ReComponent.d.ts dist/react-recomponent.d.ts",
     "prepublishOnly": "yarn build"
   },
   "jest": {

@@ -39,7 +39,7 @@ export function NoUpdate(): NoUpdateAction;
 
 export function Update<T>(state: T): UpdateAction<T>;
 
-export function SideEffects<T>(sideEffect: T): SideEffectsAction<T>;
+export function SideEffects<T>(sideEffect: SideEffect<T>): SideEffectsAction<T>;
 
 export function UpdateWithSideEffects<S, SE>(state: S, sideEffects: SideEffect<SE>): UpdateWithSideEffectsAction<S, SE>;
 
