@@ -42,6 +42,7 @@ A reducer component is used like a regular, stateful, React component with the d
   - [Handling Events](#handling-events)
   - [Manage State Across the Tree](#manage-state-across-the-tree)
   - [Flow](#flow)
+  - [TypeScript](#typescript)
 - [API Reference](#api-reference)
 
 ## Installation
@@ -427,6 +428,12 @@ Check out the [type definition tests](https://github.com/philipp-spiess/react-re
   for actions
 - While it is possible to exhaustively type check the reducer, Flow will still require every branch to return an effect.
   This is why the above examples returns `NoUpdate()` even though the branch can never be reached.
+
+### TypeScript
+
+In addition to [Flow](#flow), _ReComponent_ also comes with [TypeScript](https://www.typescriptlang.org/) definitions built-in.
+
+You can learn more about our TypeScript support by looking at the [declaration](type-definitions/ReComponent.d.ts) and the accompanying [tests](type-definitions/ts-tests).
 
 ## API Reference
 
