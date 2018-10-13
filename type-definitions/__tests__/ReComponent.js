@@ -4,14 +4,17 @@ import * as React from "react";
 
 import {
   ReComponent,
-
   Update,
   NoUpdate,
   SideEffects,
   UpdateWithSideEffects
 } from "../../";
 
-type Action = {| type: "A" |} | {| type: "B" |} | {| type: "C" |} | {| type: "D" |}
+type Action =
+  | {| type: "A" |}
+  | {| type: "B" |}
+  | {| type: "C" |}
+  | {| type: "D" |};
 
 class StateMismatch extends ReComponent<{}, { count: number }, Action> {
   // $ExpectError
@@ -54,7 +57,6 @@ class UpdateTypes extends ReComponent<{}, { count: number }, Action> {
           instance.someClassProperty = 1;
           // $ExpectError - `instance.someClassProperty` has to be number
           instance.someClassProperty = "1";
-
         });
     }
   }
@@ -63,9 +65,9 @@ class UpdateTypes extends ReComponent<{}, { count: number }, Action> {
 class TypedActionTypes extends ReComponent<
   {},
   { count: number },
-  {| type: 'CLICK' |}
+  {| type: "CLICK" |}
 > {
-  handleClick = () => this.send({ type: 'CLICK' });
+  handleClick = () => this.send({ type: "CLICK" });
 
   static reducer(action, state) {
     switch (action.type) {
@@ -105,7 +107,7 @@ const absurd = <T>(x: empty): T => {
 class ExhaustivelyTypedFailingActionTypes extends ReComponent<
   {},
   { count: number },
-  {| type: 'CLICK' |} | {| type: 'CLACK' |}
+  {| type: "CLICK" |} | {| type: "CLACK" |}
 > {
   static reducer(action, state) {
     switch (action.type) {
@@ -139,16 +141,17 @@ class ExhaustivelyTypedPassingActionTypes extends ReComponent<
   }
 }
 
-
 class FailingPayloadType extends ReComponent<
   {},
   { count: number, awesome: boolean },
   { type: "CLICK", payload: number } | { type: "CLACK", payload: boolean }
 > {
   // $ExpectError - `clicks` should be `number`
-  handleClick = (clicks: boolean) => this.send({ type: 'CLICK', payload: clicks });
+  handleClick = (clicks: boolean) =>
+    this.send({ type: "CLICK", payload: clicks });
   // $ExpectError - `awesome` should be `boolean`
-  handleClack = (awesome: number) => this.send({ type: 'CLACK', payload: awesome });
+  handleClack = (awesome: number) =>
+    this.send({ type: "CLACK", payload: awesome });
 
   static reducer(action, state) {
     switch (action.type) {
@@ -170,9 +173,11 @@ class PassingPayloadType extends ReComponent<
   {},
   { count: number, awesome: boolean },
   { type: "CLICK", payload: number } | { type: "CLACK", payload: boolean }
-  > {
-  handleClick = (clicks: number) => this.send({ type: 'CLICK', payload: clicks });
-  handleClack = (awesome: boolean) => this.send({ type: 'CLACK', payload: awesome });
+> {
+  handleClick = (clicks: number) =>
+    this.send({ type: "CLICK", payload: clicks });
+  handleClack = (awesome: boolean) =>
+    this.send({ type: "CLACK", payload: awesome });
 
   static reducer(action, state) {
     switch (action.type) {
@@ -191,7 +196,7 @@ class PassingPayloadType extends ReComponent<
 class CreateSenderTest extends ReComponent<
   {},
   { count: number },
-  {| type: 'CLICK' |} | {| type: 'CLACK', payload: number |}
+  {| type: "CLICK" |} | {| type: "CLACK", payload: number |}
 > {
   handleClick = this.createSender("CLICK");
   handleClack = this.createSender("CLACK");

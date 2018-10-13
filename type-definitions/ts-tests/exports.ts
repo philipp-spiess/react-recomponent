@@ -1,5 +1,12 @@
-import * as recomponent from 'react-recomponent';
-import { NoUpdate, Update, SideEffects, UpdateWithSideEffects, ReComponent, RePureComponent } from 'react-recomponent';
+import * as recomponent from "react-recomponent";
+import {
+  NoUpdate,
+  Update,
+  SideEffects,
+  UpdateWithSideEffects,
+  ReComponent,
+  RePureComponent
+} from "react-recomponent";
 
 NoUpdate; // $ExpectType () => NoUpdateAction
 Update; // $ExpectType <T>(state: T) => UpdateAction<T>

@@ -1,4 +1,9 @@
-import { NoUpdate, Update, SideEffects, UpdateWithSideEffects } from 'react-recomponent';
+import {
+  NoUpdate,
+  Update,
+  SideEffects,
+  UpdateWithSideEffects
+} from "react-recomponent";
 
 // $ExpectType NoUpdateAction
 NoUpdate();
