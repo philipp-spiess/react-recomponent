@@ -33,7 +33,7 @@
   "scripts": {
     "test": "run-p test:js test:types:*",
     "prettier": "prettier {{__tests__,src,type-definitions}/**/*.{js,flow,ts},README.md}",
-    "format": "yarn prettier --write",
+    "format": "npm run prettier -- --write",
     "test:js": "jest",
     "test:types:ts": "yarn build && tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
     "test:types:flow": "flow check .",
