@@ -1,6 +1,6 @@
 {
   "name": "react-recomponent",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "main": "dist/react-recomponent.js",
   "typings": "type-definitions/ReComponent.d.ts",
   "umd:main": "dist/react-recomponent.umd.js",
