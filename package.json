@@ -2,7 +2,7 @@
   "name": "react-recomponent",
   "version": "1.0.0-rc.2",
   "main": "dist/react-recomponent.js",
-  "typings": "dist/react-recomponent.d.ts",
+  "typings": "type-definitions/ReComponent.d.ts",
   "umd:main": "dist/react-recomponent.umd.js",
   "module": "dist/react-recomponent.m.js",
   "source": "src/index.js",
@@ -10,6 +10,7 @@
   "files": [
     "dist",
     "type-definitions/ReComponent.js.flow",
+    "type-definitions/ReComponent.d.ts",
     "README.md",
     "LICENSE"
   ],
@@ -37,9 +38,7 @@
     "test:js": "jest",
     "test:types:ts": "yarn build && tsc ./type-definitions/ReComponent.d.ts --lib es2015 && dtslint type-definitions/ts-tests",
     "test:types:flow": "flow check .",
-    "build": "run-p bundle:*",
-    "bundle:dist": "microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
-    "bundle:types": "cp type-definitions/ReComponent.d.ts dist/react-recomponent.d.ts",
+    "build": "microbundle -o dist/ --name ReComponent --compress false --sourcemap false",
     "prepublishOnly": "yarn build"
   },
   "jest": {
