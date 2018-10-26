@@ -19,9 +19,6 @@
   <a href="https://codecov.io/github/philipp-spiess/react-recomponent">
     <img alt="Codecov" src="https://img.shields.io/codecov/c/github/philipp-spiess/react-recomponent.svg" />
   </a>
-  <a href="https://twitter.com/acdlite/status/974390255393505280">
-    <img alt="Blazing Fast" src="https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-brightgreen.svg" />
-  </a>
 </p>
 
 ---
