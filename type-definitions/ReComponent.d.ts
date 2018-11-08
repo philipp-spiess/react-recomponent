@@ -50,11 +50,11 @@ export type Action = {
   type: string;
 };
 
-export class ReComponent<P = {}, S = {}> extends Component<P, S> {
-  static reducer<TState, TAction extends Action, TSideEffect = any>(
+export class ReComponent<P = {}, State = {}> extends Component<P, State> {
+  static reducer<TAction extends Action, TSideEffect = any>(
     action: Action,
-    state: TState
-  ): ReducerAction<TState, TSideEffect>;
+    state: State
+  ): ReducerAction<State, TSideEffect>;
 
   send<TAction extends Action>(action: TAction): void;
 
